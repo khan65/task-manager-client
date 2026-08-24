@@ -1,0 +1,103 @@
+<div class="tasks-page">
+  <header>
+    <h1>Tasks</h1>
+    <select [(ngModel)]="selectedProjectId" (ngModelChange)="onProjectChange()">
+      @for (project of projects(); track project.id) {
+        <option [value]="project.id">{{ project.name }}</option>
+      }
+    </select>
+    <button type="button" class="add-toggle" (click)="showAddForm = !showAddForm">
+      {{ showAddForm ? 'Cancel' : '+ New task' }}
+    </button>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (showAddForm) {
+    <form class="add-form" (ngSubmit)="addTask()">
+      <input name="title" [(ngModel)]="newTitle" placeholder="Task title" required />
+      <input name="description" [(ngModel)]="newDescription" placeholder="Description" />
+      <select name="category" [(ngModel)]="newCategoryId" required>
+        <option value="" disabled selected>Category…</option>
+        @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.name }}</option>
+        }
+      </select>
+      <select name="subcategory" [(ngModel)]="newSubCategoryId">
+        <option value="">No subcategory</option>
+        @for (sub of subCategoriesForNewCategory(); track sub.id) {
+          <option [value]="sub.id">{{ sub.name }}</option>
+        }
+      </select>
+      <select name="assignee" [(ngModel)]="newAssigneeId">
+        <option value="">Unassigned</option>
+        @for (user of users(); track user.id) {
+          <option [value]="user.id">{{ user.fullName }}</option>
+        }
+      </select>
+      <input name="dueDate" type="date" [(ngModel)]="newDueDate" />
+      <button type="submit">Create task</button>
+    </form>
+  }
+
+  <div class="board">
+    @for (state of states(); track state.id) {
+      <section class="column">
+        <h2>{{ state.name }} <span class="count">{{ tasksInState(state.id).length }}</span></h2>
+
+        @for (task of tasksInState(state.id); track task.id) {
+          <article class="task-card">
+            <button type="button" class="task-title" (click)="toggleExpand(task)">{{ task.title }}</button>
+            <p class="task-meta">
+              {{ task.taskCategoryName }}@if (task.taskSubCategoryName) { · {{ task.taskSubCategoryName }} }
+            </p>
+            <p class="task-meta">
+              @if (task.assigneeName) { {{ task.assigneeName }} } @else { Unassigned }
+              @if (task.dueDate) { · due {{ task.dueDate | date: 'mediumDate' }} }
+            </p>
+
+            <select class="move-select" [ngModel]="task.taskStateId" (ngModelChange)="moveTask(task, $event)">
+              @for (s of states(); track s.id) {
+                <option [value]="s.id">{{ s.name }}</option>
+              }
+            </select>
+
+            @if (expandedTaskId() === task.id) {
+              <div class="task-detail">
+                <p class="task-description">{{ task.description }}</p>
+
+                <h3>Discussion</h3>
+                <ul class="discussion-list">
+                  @for (comment of discussions(); track comment.id) {
+                    <li><strong>{{ comment.authorName }}:</strong> {{ comment.message }}</li>
+                  }
+                  @empty {
+                    <li class="muted">No comments yet.</li>
+                  }
+                </ul>
+                <form class="comment-form" (ngSubmit)="postComment(task)">
+                  <input name="comment" [(ngModel)]="newComment" placeholder="Add a comment…" />
+                  <button type="submit">Post</button>
+                </form>
+
+                <h3>History</h3>
+                <ul class="history-list">
+                  @for (entry of stateHistory(); track entry.id) {
+                    <li>
+                      {{ entry.fromStateName ?? 'created' }} → {{ entry.toStateName }}
+                      by {{ entry.changedByUserName }}, {{ entry.changedAt | date: 'short' }}
+                    </li>
+                  }
+                </ul>
+
+                <button type="button" class="link-btn" (click)="removeTask(task)">Remove task</button>
+              </div>
+            }
+          </article>
+        }
+      </section>
+    }
+  </div>
+</div>
