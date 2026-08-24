@@ -1,5 +1,5 @@
 <div class="shell">
-  <aside class="sidebar">
+  <header class="topbar">
     <div class="brand">
       <span class="brand-mark">TM</span>
       <span class="brand-name">Task Manager</span>
@@ -7,32 +7,38 @@
 
     <nav class="nav">
       @for (item of navItems; track item.path) {
-        <a [routerLink]="item.path" routerLinkActive="active" class="nav-link">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path [attr.d]="item.icon" />
-          </svg>
-          {{ item.label }}
-        </a>
+        <a [routerLink]="item.path" routerLinkActive="active" class="nav-link">{{ item.label }}</a>
       }
     </nav>
 
     @if (auth.currentUser(); as user) {
-      <div class="user-card">
-        <div class="user-avatar">{{ user.fullName.charAt(0) }}</div>
-        <div class="user-info">
-          <span class="user-name">{{ user.fullName }}</span>
-          <span class="user-role">{{ (user.roles ?? []).join(', ') || 'Member' }}</span>
-        </div>
-        <button type="button" class="signout-btn" (click)="signOut()" title="Sign out">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <path d="M16 17l5-5-5-5" />
-            <path d="M21 12H9" />
+      <div class="user-menu">
+        <button type="button" class="user-trigger" (click)="menuOpen = !menuOpen" (blur)="closeMenuSoon()">
+          <span class="user-avatar">{{ user.fullName.charAt(0) }}</span>
+          <span class="user-info">
+            <span class="user-name">{{ user.fullName }}</span>
+            <span class="user-role">{{ (user.roles ?? []).join(', ') || 'Member' }}</span>
+          </span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <path d="M6 9l6 6 6-6" />
           </svg>
         </button>
+
+        @if (menuOpen) {
+          <div class="user-dropdown">
+            <button type="button" class="dropdown-item" (click)="signOut()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="M16 17l5-5-5-5" />
+                <path d="M21 12H9" />
+              </svg>
+              Sign out
+            </button>
+          </div>
+        }
       </div>
     }
-  </aside>
+  </header>
 
   <main class="content">
     <router-outlet></router-outlet>
