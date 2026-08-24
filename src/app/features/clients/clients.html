@@ -1,0 +1,200 @@
+<div class="clients-page">
+  <header>
+    <h1>Clients</h1>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  <nav class="tabs">
+    <button type="button" [class.active]="activeTab() === 'clients'" (click)="setTab('clients')">Clients</button>
+    <button type="button" [class.active]="activeTab() === 'contacts'" (click)="setTab('contacts')">Contacts</button>
+    <button type="button" [class.active]="activeTab() === 'categories'" (click)="setTab('categories')">Categories</button>
+    <button type="button" [class.active]="activeTab() === 'products'" (click)="setTab('products')">Products</button>
+    <button type="button" [class.active]="activeTab() === 'contact-groups'" (click)="setTab('contact-groups')">Contact Groups</button>
+  </nav>
+
+  @if (activeTab() === 'clients') {
+    <section>
+      <table>
+        <thead><tr><th>Name</th><th>Category</th><th>Products</th><th></th></tr></thead>
+        <tbody>
+          @for (client of clients(); track client.id) {
+            <tr>
+              <td>{{ client.name }}</td>
+              <td>{{ client.clientCategoryName }}</td>
+              <td class="chips-cell">
+                @for (product of products(); track product.id) {
+                  <button
+                    type="button"
+                    class="chip"
+                    [class.active]="hasProduct(client, product.name)"
+                    [disabled]="!auth.isAdmin()"
+                    (click)="toggleProduct(client, product)"
+                  >
+                    {{ product.name }}
+                  </button>
+                }
+              </td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="link-btn" (click)="removeClient(client.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (auth.isAdmin()) {
+        <form class="add-form" (ngSubmit)="addClient()">
+          <select name="clientCategory" [(ngModel)]="newClientCategoryId" required>
+            <option value="" disabled selected>Category…</option>
+            @for (cat of categories(); track cat.id) {
+              <option [value]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+          <input name="clientName" [(ngModel)]="newClientName" placeholder="Client name" required />
+          <input name="clientDescription" [(ngModel)]="newClientDescription" placeholder="Description" />
+          <button type="submit">Add client</button>
+        </form>
+      }
+    </section>
+  }
+
+  @if (activeTab() === 'contacts') {
+    <section>
+      <table>
+        <thead><tr><th>Name</th><th>Client</th><th>Group</th><th>Email</th><th></th></tr></thead>
+        <tbody>
+          @for (contact of contacts(); track contact.id) {
+            <tr>
+              <td>{{ contact.fullName }}</td>
+              <td>{{ contact.clientName }}</td>
+              <td>{{ contact.contactGroupName ?? '—' }}</td>
+              <td>{{ contact.email }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="link-btn" (click)="removeContact(contact.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (auth.isAdmin()) {
+        <form class="add-form" (ngSubmit)="addContact()">
+          <select name="contactClient" [(ngModel)]="newContactClientId" required>
+            <option value="" disabled selected>Client…</option>
+            @for (client of clients(); track client.id) {
+              <option [value]="client.id">{{ client.name }}</option>
+            }
+          </select>
+          <select name="contactGroup" [(ngModel)]="newContactGroupId">
+            <option value="">No group</option>
+            @for (group of contactGroups(); track group.id) {
+              <option [value]="group.id">{{ group.name }}</option>
+            }
+          </select>
+          <input name="contactName" [(ngModel)]="newContactName" placeholder="Full name" required />
+          <input name="contactEmail" [(ngModel)]="newContactEmail" placeholder="Email" />
+          <input name="contactPhone" [(ngModel)]="newContactPhone" placeholder="Phone" />
+          <button type="submit">Add contact</button>
+        </form>
+      }
+    </section>
+  }
+
+  @if (activeTab() === 'categories') {
+    <section>
+      <table>
+        <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (cat of categories(); track cat.id) {
+            <tr>
+              <td>{{ cat.name }}</td>
+              <td>{{ cat.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="link-btn" (click)="removeCategory(cat.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (auth.isAdmin()) {
+        <form class="add-form" (ngSubmit)="addCategory()">
+          <input name="categoryName" [(ngModel)]="newCategoryName" placeholder="Category name" required />
+          <input name="categoryDescription" [(ngModel)]="newCategoryDescription" placeholder="Description" />
+          <button type="submit">Add category</button>
+        </form>
+      }
+    </section>
+  }
+
+  @if (activeTab() === 'products') {
+    <section>
+      <table>
+        <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (product of products(); track product.id) {
+            <tr>
+              <td>{{ product.name }}</td>
+              <td>{{ product.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="link-btn" (click)="removeProduct(product.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (auth.isAdmin()) {
+        <form class="add-form" (ngSubmit)="addProduct()">
+          <input name="productName" [(ngModel)]="newProductName" placeholder="Product name" required />
+          <input name="productDescription" [(ngModel)]="newProductDescription" placeholder="Description" />
+          <button type="submit">Add product</button>
+        </form>
+      }
+    </section>
+  }
+
+  @if (activeTab() === 'contact-groups') {
+    <section>
+      <table>
+        <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (group of contactGroups(); track group.id) {
+            <tr>
+              <td>{{ group.name }}</td>
+              <td>{{ group.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="link-btn" (click)="removeContactGroup(group.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (auth.isAdmin()) {
+        <form class="add-form" (ngSubmit)="addContactGroup()">
+          <input name="groupName" [(ngModel)]="newGroupName" placeholder="Group name" required />
+          <input name="groupDescription" [(ngModel)]="newGroupDescription" placeholder="Description" />
+          <button type="submit">Add group</button>
+        </form>
+      }
+    </section>
+  }
+
+  @if (!auth.isAdmin()) {
+    <p class="hint">Sign in as an Admin to add or remove entries.</p>
+  }
+</div>

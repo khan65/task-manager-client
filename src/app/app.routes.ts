@@ -22,4 +22,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/org-structure/org-structure').then((m) => m.OrgStructure),
   },
+  {
+    path: 'clients',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/clients/clients').then((m) => m.Clients),
+  },
 ];
