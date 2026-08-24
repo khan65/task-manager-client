@@ -2,10 +2,148 @@
   align-items: center;
 }
 
+.view-toggle {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
 .head-actions {
   display: flex;
   gap: 0.6rem;
   align-items: center;
+}
+
+/* ---------- List view ---------- */
+
+.tabs-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.tab:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.tab.active {
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-soft-border);
+  color: var(--color-primary);
+}
+
+.tab-count {
+  color: var(--color-text-faint);
+  font-weight: 400;
+}
+
+.tab.active .tab-count {
+  color: var(--color-primary);
+  opacity: 0.75;
+}
+
+.tab-removed {
+  margin-left: auto;
+}
+
+.list-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.filter-sidebar {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.filter-sidebar h2 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  margin: 0 0 0.2rem;
+}
+
+.filter-sidebar label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.checkbox-field {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.4rem !important;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.filter-actions .btn {
+  flex: 1;
+}
+
+.list-main {
+  padding: 0;
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.mono {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+}
+
+.text-faint {
+  color: var(--color-text-faint);
+}
+
+.state-select {
+  border: none;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  padding: 0.8rem 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 900px) {
+  .list-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .add-task-form {

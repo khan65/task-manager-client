@@ -71,6 +71,45 @@ export interface ProjectTask {
   taskStateName: string;
   assigneeId: string | null;
   assigneeName: string | null;
+  discussionCount: number;
+  attachmentCount: number;
+}
+
+export interface PagedResult<T> {
+  items: T[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface TaskStateTabCount {
+  stateId: string;
+  stateName: string;
+  count: number;
+}
+
+/** Every field optional. Deliberately missing: Stakeholder, Order, OrderType, Product —
+ *  those depend on modules not built yet (Phase 10 in the blueprint). */
+export interface TaskSearchFilters {
+  code?: string;
+  projectId?: string;
+  departmentId?: string;
+  assigneeId?: string;
+  taskCategoryId?: string;
+  taskSubCategoryId?: string;
+  taskTypeId?: string;
+  taskRoleId?: string;
+  priorityId?: string;
+  taskFrequencyId?: string;
+  taskStateId?: string;
+  overdue?: boolean;
+  createdFrom?: string;
+  createdTo?: string;
+  verifiedFrom?: string;
+  verifiedTo?: string;
+  includeRemoved?: boolean;
+  onlyRemoved?: boolean;
 }
 
 export interface TaskStateHistoryEntry {

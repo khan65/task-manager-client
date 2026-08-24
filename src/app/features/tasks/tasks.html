@@ -2,13 +2,19 @@
   <header class="page-head">
     <div>
       <h1>Tasks</h1>
+      <div class="view-toggle" role="tablist">
+        <button type="button" class="chip" [class.active]="view() === 'board'" (click)="setView('board')">Board</button>
+        <button type="button" class="chip" [class.active]="view() === 'list'" (click)="setView('list')">All tasks</button>
+      </div>
     </div>
     <div class="head-actions">
-      <select class="select" [(ngModel)]="selectedProjectId" (ngModelChange)="onProjectChange()">
-        @for (project of projects(); track project.id) {
-          <option [value]="project.id">{{ project.name }}</option>
-        }
-      </select>
+      @if (view() === 'board') {
+        <select class="select" [(ngModel)]="selectedProjectId" (ngModelChange)="onProjectChange()">
+          @for (project of projects(); track project.id) {
+            <option [value]="project.id">{{ project.name }}</option>
+          }
+        </select>
+      }
       <button type="button" class="btn btn-primary" (click)="showAddForm = true">+ New task</button>
     </div>
   </header>
@@ -17,6 +23,194 @@
     <p class="banner-error">{{ errorMessage() }}</p>
   }
 
+  @if (view() === 'list') {
+    <div class="tabs-strip">
+      <button type="button" class="tab" [class.active]="statusTab() === 'all'" (click)="selectStatusTab('all')">
+        All <span class="tab-count">{{ totalTaskCount() }}</span>
+      </button>
+      @for (s of stateTabCounts(); track s.stateId) {
+        <button type="button" class="tab" [class.active]="statusTab() === s.stateId" (click)="selectStatusTab(s.stateId)">
+          {{ s.stateName }} <span class="tab-count">{{ s.count }}</span>
+        </button>
+      }
+      <button type="button" class="tab tab-removed" [class.active]="statusTab() === 'removed'" (click)="selectStatusTab('removed')">
+        Removed
+      </button>
+    </div>
+
+    <div class="list-layout">
+      <aside class="filter-sidebar card">
+        <h2>Filters</h2>
+        <label>Task code<input class="field" [(ngModel)]="filterCode" placeholder="TO-000123" /></label>
+        <label>
+          Project
+          <select class="select" [(ngModel)]="filterProjectId">
+            <option value="">Any project</option>
+            @for (project of projects(); track project.id) {
+              <option [value]="project.id">{{ project.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Department
+          <select class="select" [(ngModel)]="filterDepartmentId">
+            <option value="">Any department</option>
+            @for (dept of departments(); track dept.id) {
+              <option [value]="dept.id">{{ dept.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Assignee
+          <select class="select" [(ngModel)]="filterAssigneeId">
+            <option value="">Any assignee</option>
+            @for (user of users(); track user.id) {
+              <option [value]="user.id">{{ user.fullName }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Category
+          <select class="select" [(ngModel)]="filterCategoryId">
+            <option value="">Any category</option>
+            @for (cat of categories(); track cat.id) {
+              <option [value]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Subcategory
+          <select class="select" [(ngModel)]="filterSubCategoryId">
+            <option value="">Any subcategory</option>
+            @for (sub of subCategories(); track sub.id) {
+              <option [value]="sub.id">{{ sub.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Task type
+          <select class="select" [(ngModel)]="filterTypeId">
+            <option value="">Any type</option>
+            @for (t of taskTypes(); track t.id) {
+              <option [value]="t.id">{{ t.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Role
+          <select class="select" [(ngModel)]="filterRoleId">
+            <option value="">Any role</option>
+            @for (r of taskRoles(); track r.id) {
+              <option [value]="r.id">{{ r.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Priority
+          <select class="select" [(ngModel)]="filterPriorityId">
+            <option value="">Any priority</option>
+            @for (p of priorities(); track p.id) {
+              <option [value]="p.id">{{ p.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Frequency
+          <select class="select" [(ngModel)]="filterFrequencyId">
+            <option value="">Any frequency</option>
+            @for (f of frequencies(); track f.id) {
+              <option [value]="f.id">{{ f.name }}</option>
+            }
+          </select>
+        </label>
+        <label class="checkbox-field">
+          <input type="checkbox" [(ngModel)]="filterOverdue" />
+          Overdue only
+        </label>
+        <label>Created from<input class="field" type="date" [(ngModel)]="filterCreatedFrom" /></label>
+        <label>Created to<input class="field" type="date" [(ngModel)]="filterCreatedTo" /></label>
+        <label>Verified from<input class="field" type="date" [(ngModel)]="filterVerifiedFrom" /></label>
+        <label>Verified to<input class="field" type="date" [(ngModel)]="filterVerifiedTo" /></label>
+
+        <div class="filter-actions">
+          <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+          <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+        </div>
+      </aside>
+
+      <section class="list-main card">
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Title</th>
+                <th>Project</th>
+                <th>Category</th>
+                <th>Assignee</th>
+                <th>Priority</th>
+                <th>State</th>
+                <th>Due</th>
+                <th>Activity</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (task of listResult()?.items ?? []; track task.id) {
+                <tr>
+                  <td class="mono">{{ task.taskCode }}</td>
+                  <td>{{ task.title }}</td>
+                  <td>{{ task.projectName }}</td>
+                  <td>
+                    {{ task.taskCategoryName }}
+                    @if (task.taskSubCategoryName) {
+                      <span class="text-faint"> · {{ task.taskSubCategoryName }}</span>
+                    }
+                  </td>
+                  <td>{{ task.assigneeName ?? '—' }}</td>
+                  <td>{{ task.priorityName ?? '—' }}</td>
+                  <td>
+                    <select
+                      class="select state-select"
+                      [class]="'state-select state-' + stateKey(task.taskStateName) + '-badge'"
+                      [ngModel]="task.taskStateId"
+                      (ngModelChange)="moveListTask(task, $event)"
+                    >
+                      @for (s of states(); track s.id) {
+                        <option [value]="s.id">{{ s.name }}</option>
+                      }
+                    </select>
+                  </td>
+                  <td>{{ task.dueDate ? (task.dueDate | date: 'mediumDate') : '—' }}</td>
+                  <td class="text-faint">💬 {{ task.discussionCount }} · 📎 {{ task.attachmentCount }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="9" class="empty-note">No tasks match these filters.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (listResult() && listResult()!.totalPages > 1) {
+          <nav class="pager">
+            <button type="button" class="btn btn-secondary" [disabled]="listPage() <= 1" (click)="goToListPage(listPage() - 1)">← Prev</button>
+            <span>Page {{ listPage() }} of {{ listResult()!.totalPages }} · {{ listResult()!.totalCount }} tasks</span>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              [disabled]="listPage() >= listResult()!.totalPages"
+              (click)="goToListPage(listPage() + 1)"
+            >
+              Next →
+            </button>
+          </nav>
+        }
+      </section>
+    </div>
+  }
+
+  @if (view() === 'board') {
   <div class="board">
     @for (state of states(); track state.id) {
       <section class="column">
@@ -94,6 +288,7 @@
       </section>
     }
   </div>
+  }
 
   <app-modal [open]="showAddForm" title="New Task" (closed)="showAddForm = false">
     <form class="modal-form" (ngSubmit)="addTask()">

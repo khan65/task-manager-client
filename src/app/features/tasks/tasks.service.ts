@@ -3,13 +3,20 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
+  PagedResult,
+  Priority,
   ProjectTask,
   TaskAttachment,
   TaskCategory,
   TaskDiscussion,
+  TaskFrequency,
+  TaskRole,
+  TaskSearchFilters,
   TaskState,
   TaskStateHistoryEntry,
+  TaskStateTabCount,
   TaskSubCategory,
+  TaskType,
 } from './tasks.models';
 
 const base = environment.apiBaseUrl;
@@ -50,6 +57,34 @@ export class TasksService {
     return this.http.get<TaskState[]>(`${base}/task-states`);
   }
 
+  getTaskTypes(): Observable<TaskType[]> {
+    return this.http.get<TaskType[]>(`${base}/task-types`);
+  }
+  createTaskType(name: string, description: string): Observable<TaskType> {
+    return this.http.post<TaskType>(`${base}/task-types`, { name, description });
+  }
+
+  getTaskRoles(): Observable<TaskRole[]> {
+    return this.http.get<TaskRole[]>(`${base}/task-roles`);
+  }
+  createTaskRole(name: string, description: string): Observable<TaskRole> {
+    return this.http.post<TaskRole>(`${base}/task-roles`, { name, description });
+  }
+
+  getPriorities(): Observable<Priority[]> {
+    return this.http.get<Priority[]>(`${base}/priorities`);
+  }
+  createPriority(name: string, sortOrder: number): Observable<Priority> {
+    return this.http.post<Priority>(`${base}/priorities`, { name, sortOrder });
+  }
+
+  getTaskFrequencies(): Observable<TaskFrequency[]> {
+    return this.http.get<TaskFrequency[]>(`${base}/task-frequencies`);
+  }
+  createTaskFrequency(name: string): Observable<TaskFrequency> {
+    return this.http.post<TaskFrequency>(`${base}/task-frequencies`, { name });
+  }
+
   getTasks(projectId: string): Observable<ProjectTask[]> {
     return this.http.get<ProjectTask[]>(`${base}/tasks`, { params: { projectId } });
   }
@@ -61,6 +96,29 @@ export class TasksService {
   }
   changeState(taskId: string, taskStateId: string): Observable<ProjectTask> {
     return this.http.put<ProjectTask>(`${base}/tasks/${taskId}/state`, { taskStateId });
+  }
+
+  /** The cross-project, filterable, paginated list view. */
+  searchTasks(filters: TaskSearchFilters, page: number, pageSize: number): Observable<PagedResult<ProjectTask>> {
+    return this.http.get<PagedResult<ProjectTask>>(`${base}/tasks/search`, {
+      params: this.toHttpParams(filters, page, pageSize),
+    });
+  }
+
+  getStateCounts(filters: TaskSearchFilters): Observable<TaskStateTabCount[]> {
+    return this.http.get<TaskStateTabCount[]>(`${base}/tasks/counts-by-state`, {
+      params: this.toHttpParams(filters),
+    });
+  }
+
+  private toHttpParams(filters: TaskSearchFilters, page?: number, pageSize?: number): Record<string, string> {
+    const params: Record<string, string> = {};
+    for (const [key, value] of Object.entries(filters)) {
+      if (value !== undefined && value !== null && value !== '') params[key] = String(value);
+    }
+    if (page !== undefined) params['page'] = String(page);
+    if (pageSize !== undefined) params['pageSize'] = String(pageSize);
+    return params;
   }
 
   getStateHistory(taskId: string): Observable<TaskStateHistoryEntry[]> {
