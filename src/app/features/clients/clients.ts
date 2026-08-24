@@ -1,19 +1,29 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
+import { Modal } from '../../core/ui/modal/modal';
 import { ClientsService } from './clients.service';
 import { ClientCategory, ClientRecord, Contact, ContactGroup, Product } from './clients.models';
 
 type Tab = 'categories' | 'products' | 'contact-groups' | 'clients' | 'contacts';
 
+const TAB_LABELS: Record<Tab, string> = {
+  clients: 'Client',
+  contacts: 'Contact',
+  categories: 'Category',
+  products: 'Product',
+  'contact-groups': 'Contact Group',
+};
+
 @Component({
   selector: 'app-clients',
-  imports: [FormsModule],
+  imports: [FormsModule, Modal],
   templateUrl: './clients.html',
   styleUrl: './clients.css',
 })
 export class Clients implements OnInit {
   readonly activeTab = signal<Tab>('clients');
+  readonly showAddModal = signal(false);
 
   readonly categories = signal<ClientCategory[]>([]);
   readonly products = signal<Product[]>([]);
@@ -50,6 +60,10 @@ export class Clients implements OnInit {
     this.activeTab.set(tab);
   }
 
+  get addModalTitle(): string {
+    return `Add ${TAB_LABELS[this.activeTab()]}`;
+  }
+
   reloadAll(): void {
     this.clientsService.getClientCategories().subscribe((v) => this.categories.set(v));
     this.clientsService.getProducts().subscribe((v) => this.products.set(v));
@@ -64,6 +78,7 @@ export class Clients implements OnInit {
         this.categories.update((list) => [...list, c]);
         this.newCategoryName = '';
         this.newCategoryDescription = '';
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create client category.'),
     });
@@ -80,6 +95,7 @@ export class Clients implements OnInit {
         this.products.update((list) => [...list, p]);
         this.newProductName = '';
         this.newProductDescription = '';
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create product.'),
     });
@@ -96,6 +112,7 @@ export class Clients implements OnInit {
         this.contactGroups.update((list) => [...list, g]);
         this.newGroupName = '';
         this.newGroupDescription = '';
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create contact group.'),
     });
@@ -116,6 +133,7 @@ export class Clients implements OnInit {
         this.clients.update((list) => [...list, c]);
         this.newClientName = '';
         this.newClientDescription = '';
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create client.'),
     });
@@ -160,6 +178,7 @@ export class Clients implements OnInit {
           this.newContactName = '';
           this.newContactEmail = '';
           this.newContactPhone = '';
+          this.showAddModal.set(false);
         },
         error: () => this.errorMessage.set('Could not create contact.'),
       });

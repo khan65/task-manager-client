@@ -1,6 +1,9 @@
 <div class="page">
   <header class="page-head">
     <h1>Organization Structure</h1>
+    @if (auth.isAdmin()) {
+      <button type="button" class="btn btn-primary" (click)="showAddModal.set(true)">+ Add</button>
+    }
   </header>
 
   @if (errorMessage()) {
@@ -15,139 +18,153 @@
   </nav>
 
   @if (activeTab() === 'organizations') {
-    <section>
-      <div class="card">
-        <table class="data-table">
-          <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
-          <tbody>
-            @for (org of organizations(); track org.id) {
-              <tr>
-                <td>{{ org.name }}</td>
-                <td>{{ org.description }}</td>
-                <td>
-                  @if (auth.isAdmin()) {
-                    <button type="button" class="btn-link" (click)="removeOrganization(org.id)">Remove</button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-      @if (auth.isAdmin()) {
-        <form class="inline-form" (ngSubmit)="addOrganization()">
-          <input name="orgName" class="field" [(ngModel)]="newOrgName" placeholder="Organization name" required />
-          <input name="orgDescription" class="field" [(ngModel)]="newOrgDescription" placeholder="Description" />
-          <button type="submit" class="btn btn-primary">Add organization</button>
-        </form>
-      }
-    </section>
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (org of organizations(); track org.id) {
+            <tr>
+              <td>{{ org.name }}</td>
+              <td>{{ org.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="btn-link" (click)="removeOrganization(org.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="3" class="empty-note">No organizations yet.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
 
   @if (activeTab() === 'departments') {
-    <section>
-      <div class="card">
-        <table class="data-table">
-          <thead><tr><th>Name</th><th>Organization</th><th>Description</th><th></th></tr></thead>
-          <tbody>
-            @for (dept of departments(); track dept.id) {
-              <tr>
-                <td>{{ dept.name }}</td>
-                <td>{{ dept.organizationName }}</td>
-                <td>{{ dept.description }}</td>
-                <td>
-                  @if (auth.isAdmin()) {
-                    <button type="button" class="btn-link" (click)="removeDepartment(dept.id)">Remove</button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Organization</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (dept of departments(); track dept.id) {
+            <tr>
+              <td>{{ dept.name }}</td>
+              <td>{{ dept.organizationName }}</td>
+              <td>{{ dept.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="btn-link" (click)="removeDepartment(dept.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="empty-note">No departments yet.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
 
-      @if (auth.isAdmin()) {
-        <form class="inline-form" (ngSubmit)="addDepartment()">
+  @if (activeTab() === 'designations') {
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>Title</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (d of designations(); track d.id) {
+            <tr>
+              <td>{{ d.title }}</td>
+              <td>{{ d.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="btn-link" (click)="removeDesignation(d.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="3" class="empty-note">No designations yet.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (activeTab() === 'grades') {
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Level</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (g of grades(); track g.id) {
+            <tr>
+              <td>{{ g.name }}</td>
+              <td>{{ g.level }}</td>
+              <td>{{ g.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="btn-link" (click)="removeGrade(g.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="empty-note">No grades yet.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (!auth.isAdmin()) {
+    <p class="admin-hint">Sign in as an Admin to add or remove entries.</p>
+  }
+
+  <app-modal [open]="showAddModal()" [title]="addModalTitle" (closed)="showAddModal.set(false)">
+    @if (activeTab() === 'organizations') {
+      <form class="modal-form" (ngSubmit)="addOrganization()">
+        <label>Name<input name="orgName" class="field" [(ngModel)]="newOrgName" required /></label>
+        <label>Description<input name="orgDescription" class="field" [(ngModel)]="newOrgDescription" /></label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="showAddModal.set(false)">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add organization</button>
+        </div>
+      </form>
+    }
+    @if (activeTab() === 'departments') {
+      <form class="modal-form" (ngSubmit)="addDepartment()">
+        <label>
+          Organization
           <select name="deptOrg" class="select" [(ngModel)]="newDeptOrgId" required>
             <option value="" disabled selected>Organization…</option>
             @for (org of organizations(); track org.id) {
               <option [value]="org.id">{{ org.name }}</option>
             }
           </select>
-          <input name="deptName" class="field" [(ngModel)]="newDeptName" placeholder="Department name" required />
-          <input name="deptDescription" class="field" [(ngModel)]="newDeptDescription" placeholder="Description" />
+        </label>
+        <label>Name<input name="deptName" class="field" [(ngModel)]="newDeptName" required /></label>
+        <label>Description<input name="deptDescription" class="field" [(ngModel)]="newDeptDescription" /></label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="showAddModal.set(false)">Cancel</button>
           <button type="submit" class="btn btn-primary">Add department</button>
-        </form>
-      }
-    </section>
-  }
-
-  @if (activeTab() === 'designations') {
-    <section>
-      <div class="card">
-        <table class="data-table">
-          <thead><tr><th>Title</th><th>Description</th><th></th></tr></thead>
-          <tbody>
-            @for (d of designations(); track d.id) {
-              <tr>
-                <td>{{ d.title }}</td>
-                <td>{{ d.description }}</td>
-                <td>
-                  @if (auth.isAdmin()) {
-                    <button type="button" class="btn-link" (click)="removeDesignation(d.id)">Remove</button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-      @if (auth.isAdmin()) {
-        <form class="inline-form" (ngSubmit)="addDesignation()">
-          <input name="designationTitle" class="field" [(ngModel)]="newDesignationTitle" placeholder="Title (e.g. Software Engineer)" required />
-          <input name="designationDescription" class="field" [(ngModel)]="newDesignationDescription" placeholder="Description" />
+        </div>
+      </form>
+    }
+    @if (activeTab() === 'designations') {
+      <form class="modal-form" (ngSubmit)="addDesignation()">
+        <label>Title<input name="designationTitle" class="field" [(ngModel)]="newDesignationTitle" placeholder="e.g. Software Engineer" required /></label>
+        <label>Description<input name="designationDescription" class="field" [(ngModel)]="newDesignationDescription" /></label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="showAddModal.set(false)">Cancel</button>
           <button type="submit" class="btn btn-primary">Add designation</button>
-        </form>
-      }
-    </section>
-  }
-
-  @if (activeTab() === 'grades') {
-    <section>
-      <div class="card">
-        <table class="data-table">
-          <thead><tr><th>Name</th><th>Level</th><th>Description</th><th></th></tr></thead>
-          <tbody>
-            @for (g of grades(); track g.id) {
-              <tr>
-                <td>{{ g.name }}</td>
-                <td>{{ g.level }}</td>
-                <td>{{ g.description }}</td>
-                <td>
-                  @if (auth.isAdmin()) {
-                    <button type="button" class="btn-link" (click)="removeGrade(g.id)">Remove</button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-      @if (auth.isAdmin()) {
-        <form class="inline-form" (ngSubmit)="addGrade()">
-          <input name="gradeName" class="field" [(ngModel)]="newGradeName" placeholder="Grade name (e.g. L2)" required />
-          <input name="gradeLevel" class="field" type="number" [(ngModel)]="newGradeLevel" placeholder="Level" required />
-          <input name="gradeDescription" class="field" [(ngModel)]="newGradeDescription" placeholder="Description" />
+        </div>
+      </form>
+    }
+    @if (activeTab() === 'grades') {
+      <form class="modal-form" (ngSubmit)="addGrade()">
+        <label>Name<input name="gradeName" class="field" [(ngModel)]="newGradeName" placeholder="e.g. L2" required /></label>
+        <label>Level<input name="gradeLevel" class="field" type="number" [(ngModel)]="newGradeLevel" required /></label>
+        <label>Description<input name="gradeDescription" class="field" [(ngModel)]="newGradeDescription" /></label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="showAddModal.set(false)">Cancel</button>
           <button type="submit" class="btn btn-primary">Add grade</button>
-        </form>
-      }
-    </section>
-  }
-
-  @if (!auth.isAdmin()) {
-    <p class="admin-hint">Sign in as an Admin to add or remove entries.</p>
-  }
+        </div>
+      </form>
+    }
+  </app-modal>
 </div>

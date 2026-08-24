@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
+import { Modal } from '../../core/ui/modal/modal';
 import { ClientsService } from '../clients/clients.service';
 import { ClientRecord } from '../clients/clients.models';
 import { UsersService } from '../users/users.service';
@@ -13,12 +14,13 @@ type Tab = 'projects' | 'project-types';
 
 @Component({
   selector: 'app-projects',
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, Modal],
   templateUrl: './projects.html',
   styleUrl: './projects.css',
 })
 export class Projects implements OnInit {
   readonly activeTab = signal<Tab>('projects');
+  readonly showAddModal = signal(false);
   readonly statuses = PROJECT_STATUSES;
 
   readonly projects = signal<Project[]>([]);
@@ -54,6 +56,10 @@ export class Projects implements OnInit {
     this.activeTab.set(tab);
   }
 
+  get addModalTitle(): string {
+    return this.activeTab() === 'projects' ? 'Add Project' : 'Add Project Type';
+  }
+
   reloadAll(): void {
     this.projectsService.getProjects().subscribe((v) => this.projects.set(v));
     this.projectsService.getProjectTypes().subscribe((v) => this.projectTypes.set(v));
@@ -67,6 +73,7 @@ export class Projects implements OnInit {
         this.projectTypes.update((list) => [...list, t]);
         this.newTypeName = '';
         this.newTypeDescription = '';
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create project type.'),
     });
@@ -99,6 +106,7 @@ export class Projects implements OnInit {
           this.newProjectName = '';
           this.newProjectDescription = '';
           this.newProjectEndDate = '';
+          this.showAddModal.set(false);
         },
         error: () => this.errorMessage.set('Could not create project.'),
       });

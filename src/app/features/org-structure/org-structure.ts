@@ -1,19 +1,28 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
+import { Modal } from '../../core/ui/modal/modal';
 import { OrgStructureService } from './org-structure.service';
 import { Department, Designation, Grade, Organization } from './org-structure.models';
 
 type Tab = 'organizations' | 'departments' | 'designations' | 'grades';
 
+const TAB_LABELS: Record<Tab, string> = {
+  organizations: 'Organization',
+  departments: 'Department',
+  designations: 'Designation',
+  grades: 'Grade',
+};
+
 @Component({
   selector: 'app-org-structure',
-  imports: [FormsModule],
+  imports: [FormsModule, Modal],
   templateUrl: './org-structure.html',
   styleUrl: './org-structure.css',
 })
 export class OrgStructure implements OnInit {
   readonly activeTab = signal<Tab>('organizations');
+  readonly showAddModal = signal(false);
 
   readonly organizations = signal<Organization[]>([]);
   readonly departments = signal<Department[]>([]);
@@ -46,6 +55,10 @@ export class OrgStructure implements OnInit {
     this.activeTab.set(tab);
   }
 
+  get addModalTitle(): string {
+    return `Add ${TAB_LABELS[this.activeTab()]}`;
+  }
+
   reloadAll(): void {
     this.orgStructure.getOrganizations().subscribe((v) => this.organizations.set(v));
     this.orgStructure.getDepartments().subscribe((v) => this.departments.set(v));
@@ -59,6 +72,7 @@ export class OrgStructure implements OnInit {
         this.organizations.update((list) => [...list, org]);
         this.newOrgName = '';
         this.newOrgDescription = '';
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create organization.'),
     });
@@ -81,6 +95,7 @@ export class OrgStructure implements OnInit {
         this.departments.update((list) => [...list, dept]);
         this.newDeptName = '';
         this.newDeptDescription = '';
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create department.'),
     });
@@ -98,6 +113,7 @@ export class OrgStructure implements OnInit {
         this.designations.update((list) => [...list, d]);
         this.newDesignationTitle = '';
         this.newDesignationDescription = '';
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create designation.'),
     });
@@ -116,6 +132,7 @@ export class OrgStructure implements OnInit {
         this.newGradeName = '';
         this.newGradeDescription = '';
         this.newGradeLevel = 1;
+        this.showAddModal.set(false);
       },
       error: () => this.errorMessage.set('Could not create grade.'),
     });

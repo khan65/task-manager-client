@@ -2,6 +2,7 @@ import { Component, OnInit, computed, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
+import { Modal } from '../../core/ui/modal/modal';
 import { ProjectsService } from '../projects/projects.service';
 import { Project } from '../projects/projects.models';
 import { UsersService } from '../users/users.service';
@@ -19,7 +20,7 @@ import {
 
 @Component({
   selector: 'app-tasks',
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, Modal],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css',
 })

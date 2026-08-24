@@ -9,41 +9,12 @@
           <option [value]="project.id">{{ project.name }}</option>
         }
       </select>
-      <button type="button" class="btn btn-primary" (click)="showAddForm = !showAddForm">
-        {{ showAddForm ? 'Cancel' : '+ New task' }}
-      </button>
+      <button type="button" class="btn btn-primary" (click)="showAddForm = true">+ New task</button>
     </div>
   </header>
 
   @if (errorMessage()) {
     <p class="banner-error">{{ errorMessage() }}</p>
-  }
-
-  @if (showAddForm) {
-    <form class="card inline-form add-task-form" (ngSubmit)="addTask()">
-      <input name="title" class="field" [(ngModel)]="newTitle" placeholder="Task title" required />
-      <input name="description" class="field" [(ngModel)]="newDescription" placeholder="Description" />
-      <select name="category" class="select" [(ngModel)]="newCategoryId" required>
-        <option value="" disabled selected>Category…</option>
-        @for (cat of categories(); track cat.id) {
-          <option [value]="cat.id">{{ cat.name }}</option>
-        }
-      </select>
-      <select name="subcategory" class="select" [(ngModel)]="newSubCategoryId">
-        <option value="">No subcategory</option>
-        @for (sub of subCategoriesForNewCategory(); track sub.id) {
-          <option [value]="sub.id">{{ sub.name }}</option>
-        }
-      </select>
-      <select name="assignee" class="select" [(ngModel)]="newAssigneeId">
-        <option value="">Unassigned</option>
-        @for (user of users(); track user.id) {
-          <option [value]="user.id">{{ user.fullName }}</option>
-        }
-      </select>
-      <input name="dueDate" class="field" type="date" [(ngModel)]="newDueDate" />
-      <button type="submit" class="btn btn-primary">Create task</button>
-    </form>
   }
 
   <div class="board">
@@ -121,4 +92,43 @@
       </section>
     }
   </div>
+
+  <app-modal [open]="showAddForm" title="New Task" (closed)="showAddForm = false">
+    <form class="modal-form" (ngSubmit)="addTask()">
+      <label>Title<input name="title" class="field" [(ngModel)]="newTitle" required /></label>
+      <label>Description<input name="description" class="field" [(ngModel)]="newDescription" /></label>
+      <label>
+        Category
+        <select name="category" class="select" [(ngModel)]="newCategoryId" required>
+          <option value="" disabled selected>Category…</option>
+          @for (cat of categories(); track cat.id) {
+            <option [value]="cat.id">{{ cat.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Subcategory
+        <select name="subcategory" class="select" [(ngModel)]="newSubCategoryId">
+          <option value="">No subcategory</option>
+          @for (sub of subCategoriesForNewCategory(); track sub.id) {
+            <option [value]="sub.id">{{ sub.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Assignee
+        <select name="assignee" class="select" [(ngModel)]="newAssigneeId">
+          <option value="">Unassigned</option>
+          @for (user of users(); track user.id) {
+            <option [value]="user.id">{{ user.fullName }}</option>
+          }
+        </select>
+      </label>
+      <label>Due date<input name="dueDate" class="field" type="date" [(ngModel)]="newDueDate" /></label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="showAddForm = false">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create task</button>
+      </div>
+    </form>
+  </app-modal>
 </div>

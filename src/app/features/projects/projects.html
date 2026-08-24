@@ -1,6 +1,9 @@
 <div class="page">
   <header class="page-head">
     <h1>Projects</h1>
+    @if (auth.isAdmin()) {
+      <button type="button" class="btn btn-primary" (click)="showAddModal.set(true)">+ Add</button>
+    }
   </header>
 
   @if (errorMessage()) {
@@ -47,69 +50,87 @@
             <button type="button" class="btn-link" (click)="removeProject(project.id)">Remove project</button>
           }
         </article>
+      } @empty {
+        <p class="empty-note">No projects yet.</p>
       }
+    </section>
+  }
 
-      @if (auth.isAdmin()) {
-        <form class="inline-form" (ngSubmit)="addProject()">
+  @if (activeTab() === 'project-types') {
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (type of projectTypes(); track type.id) {
+            <tr>
+              <td>{{ type.name }}</td>
+              <td>{{ type.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="btn-link" (click)="removeProjectType(type.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="3" class="empty-note">No project types yet.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (!auth.isAdmin()) {
+    <p class="admin-hint">Sign in as an Admin to add, remove, or edit entries.</p>
+  }
+
+  <app-modal [open]="showAddModal()" [title]="addModalTitle" (closed)="showAddModal.set(false)">
+    @if (activeTab() === 'projects') {
+      <form class="modal-form" (ngSubmit)="addProject()">
+        <label>
+          Client
           <select name="projectClient" class="select" [(ngModel)]="newProjectClientId" required>
             <option value="" disabled selected>Client…</option>
             @for (client of clients(); track client.id) {
               <option [value]="client.id">{{ client.name }}</option>
             }
           </select>
+        </label>
+        <label>
+          Project type
           <select name="projectType" class="select" [(ngModel)]="newProjectTypeId" required>
             <option value="" disabled selected>Project type…</option>
             @for (type of projectTypes(); track type.id) {
               <option [value]="type.id">{{ type.name }}</option>
             }
           </select>
+        </label>
+        <label>
+          Status
           <select name="projectStatus" class="select" [(ngModel)]="newProjectStatus">
             @for (s of statuses; track s) {
               <option [value]="s">{{ s }}</option>
             }
           </select>
-          <input name="projectName" class="field" [(ngModel)]="newProjectName" placeholder="Project name" required />
-          <input name="projectDescription" class="field" [(ngModel)]="newProjectDescription" placeholder="Description" />
-          <input name="projectStart" class="field" type="date" [(ngModel)]="newProjectStartDate" required />
-          <input name="projectEnd" class="field" type="date" [(ngModel)]="newProjectEndDate" />
+        </label>
+        <label>Name<input name="projectName" class="field" [(ngModel)]="newProjectName" required /></label>
+        <label>Description<input name="projectDescription" class="field" [(ngModel)]="newProjectDescription" /></label>
+        <label>Start date<input name="projectStart" class="field" type="date" [(ngModel)]="newProjectStartDate" required /></label>
+        <label>End date<input name="projectEnd" class="field" type="date" [(ngModel)]="newProjectEndDate" /></label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="showAddModal.set(false)">Cancel</button>
           <button type="submit" class="btn btn-primary">Add project</button>
-        </form>
-      }
-    </section>
-  }
-
-  @if (activeTab() === 'project-types') {
-    <section>
-      <div class="card">
-        <table class="data-table">
-          <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
-          <tbody>
-            @for (type of projectTypes(); track type.id) {
-              <tr>
-                <td>{{ type.name }}</td>
-                <td>{{ type.description }}</td>
-                <td>
-                  @if (auth.isAdmin()) {
-                    <button type="button" class="btn-link" (click)="removeProjectType(type.id)">Remove</button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-      @if (auth.isAdmin()) {
-        <form class="inline-form" (ngSubmit)="addProjectType()">
-          <input name="typeName" class="field" [(ngModel)]="newTypeName" placeholder="Type name (e.g. Fixed Price)" required />
-          <input name="typeDescription" class="field" [(ngModel)]="newTypeDescription" placeholder="Description" />
+        </div>
+      </form>
+    }
+    @if (activeTab() === 'project-types') {
+      <form class="modal-form" (ngSubmit)="addProjectType()">
+        <label>Name<input name="typeName" class="field" [(ngModel)]="newTypeName" placeholder="e.g. Fixed Price" required /></label>
+        <label>Description<input name="typeDescription" class="field" [(ngModel)]="newTypeDescription" /></label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="showAddModal.set(false)">Cancel</button>
           <button type="submit" class="btn btn-primary">Add project type</button>
-        </form>
-      }
-    </section>
-  }
-
-  @if (!auth.isAdmin()) {
-    <p class="admin-hint">Sign in as an Admin to add, remove, or edit entries.</p>
-  }
+        </div>
+      </form>
+    }
+  </app-modal>
 </div>
