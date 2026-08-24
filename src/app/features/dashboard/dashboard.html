@@ -1,0 +1,7 @@
+<div style="padding: 2rem; font-family: sans-serif;">
+  <h1>Dashboard</h1>
+  @if (auth.currentUser(); as user) {
+    <p>Signed in as <strong>{{ user.fullName }}</strong> ({{ user.email }})</p>
+  }
+  <button (click)="signOut()">Sign out</button>
+</div>
