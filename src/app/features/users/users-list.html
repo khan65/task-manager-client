@@ -1,61 +1,63 @@
-<div class="users-page">
-  <header>
+<div class="page">
+  <header class="page-head">
     <h1>Users</h1>
-    <p>{{ totalCount() }} user(s)</p>
+    <span class="count">{{ totalCount() }} user(s)</span>
   </header>
 
-  <form class="search-form" (ngSubmit)="search()">
-    <input name="search" [(ngModel)]="searchTerm" placeholder="Search by name or email…" />
-    <button type="submit">Search</button>
+  <form class="inline-form search-form" (ngSubmit)="search()">
+    <input name="search" class="field" [(ngModel)]="searchTerm" placeholder="Search by name or email…" />
+    <button type="submit" class="btn btn-secondary">Search</button>
   </form>
 
   @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
+    <p class="banner-error">{{ errorMessage() }}</p>
   }
 
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Roles</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (user of users(); track user.id) {
+  <div class="card">
+    <table class="data-table">
+      <thead>
         <tr>
-          <td>{{ user.fullName }}</td>
-          <td>{{ user.email }}</td>
-          <td class="roles-cell">
-            @for (role of roles(); track role.id) {
-              <button
-                type="button"
-                class="role-chip"
-                [class.active]="hasRole(user, role.name)"
-                [disabled]="!auth.isAdmin()"
-                [title]="role.description"
-                (click)="toggleRole(user, role)"
-              >
-                {{ role.name }}
-              </button>
-            }
-          </td>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Roles</th>
         </tr>
-      } @empty {
-        <tr><td colspan="3" class="muted">No users match your search.</td></tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @for (user of users(); track user.id) {
+          <tr>
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td class="roles-cell">
+              @for (role of roles(); track role.id) {
+                <button
+                  type="button"
+                  class="chip"
+                  [class.active]="hasRole(user, role.name)"
+                  [disabled]="!auth.isAdmin()"
+                  [title]="role.description"
+                  (click)="toggleRole(user, role)"
+                >
+                  {{ role.name }}
+                </button>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="empty-note">No users match your search.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
   @if (totalPages() > 1) {
     <nav class="pager">
-      <button type="button" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">← Prev</button>
+      <button type="button" class="btn btn-secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">← Prev</button>
       <span>Page {{ page() }} of {{ totalPages() }}</span>
-      <button type="button" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">Next →</button>
+      <button type="button" class="btn btn-secondary" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">Next →</button>
     </nav>
   }
 
   @if (!auth.isAdmin()) {
-    <p class="hint">Sign in as an Admin to change role assignments.</p>
+    <p class="admin-hint">Sign in as an Admin to change role assignments.</p>
   }
 </div>

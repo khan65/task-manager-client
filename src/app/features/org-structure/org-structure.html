@@ -1,13 +1,13 @@
-<div class="org-page">
-  <header>
+<div class="page">
+  <header class="page-head">
     <h1>Organization Structure</h1>
   </header>
 
   @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
+    <p class="banner-error">{{ errorMessage() }}</p>
   }
 
-  <nav class="tabs">
+  <nav class="tab-strip">
     <button type="button" [class.active]="activeTab() === 'organizations'" (click)="setTab('organizations')">Organizations</button>
     <button type="button" [class.active]="activeTab() === 'departments'" (click)="setTab('departments')">Departments</button>
     <button type="button" [class.active]="activeTab() === 'designations'" (click)="setTab('designations')">Designations</button>
@@ -16,28 +16,30 @@
 
   @if (activeTab() === 'organizations') {
     <section>
-      <table>
-        <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
-        <tbody>
-          @for (org of organizations(); track org.id) {
-            <tr>
-              <td>{{ org.name }}</td>
-              <td>{{ org.description }}</td>
-              <td>
-                @if (auth.isAdmin()) {
-                  <button type="button" class="link-btn" (click)="removeOrganization(org.id)">Remove</button>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <div class="card">
+        <table class="data-table">
+          <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+          <tbody>
+            @for (org of organizations(); track org.id) {
+              <tr>
+                <td>{{ org.name }}</td>
+                <td>{{ org.description }}</td>
+                <td>
+                  @if (auth.isAdmin()) {
+                    <button type="button" class="btn-link" (click)="removeOrganization(org.id)">Remove</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
       @if (auth.isAdmin()) {
-        <form class="add-form" (ngSubmit)="addOrganization()">
-          <input name="orgName" [(ngModel)]="newOrgName" placeholder="Organization name" required />
-          <input name="orgDescription" [(ngModel)]="newOrgDescription" placeholder="Description" />
-          <button type="submit">Add organization</button>
+        <form class="inline-form" (ngSubmit)="addOrganization()">
+          <input name="orgName" class="field" [(ngModel)]="newOrgName" placeholder="Organization name" required />
+          <input name="orgDescription" class="field" [(ngModel)]="newOrgDescription" placeholder="Description" />
+          <button type="submit" class="btn btn-primary">Add organization</button>
         </form>
       }
     </section>
@@ -45,35 +47,37 @@
 
   @if (activeTab() === 'departments') {
     <section>
-      <table>
-        <thead><tr><th>Name</th><th>Organization</th><th>Description</th><th></th></tr></thead>
-        <tbody>
-          @for (dept of departments(); track dept.id) {
-            <tr>
-              <td>{{ dept.name }}</td>
-              <td>{{ dept.organizationName }}</td>
-              <td>{{ dept.description }}</td>
-              <td>
-                @if (auth.isAdmin()) {
-                  <button type="button" class="link-btn" (click)="removeDepartment(dept.id)">Remove</button>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <div class="card">
+        <table class="data-table">
+          <thead><tr><th>Name</th><th>Organization</th><th>Description</th><th></th></tr></thead>
+          <tbody>
+            @for (dept of departments(); track dept.id) {
+              <tr>
+                <td>{{ dept.name }}</td>
+                <td>{{ dept.organizationName }}</td>
+                <td>{{ dept.description }}</td>
+                <td>
+                  @if (auth.isAdmin()) {
+                    <button type="button" class="btn-link" (click)="removeDepartment(dept.id)">Remove</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
       @if (auth.isAdmin()) {
-        <form class="add-form" (ngSubmit)="addDepartment()">
-          <select name="deptOrg" [(ngModel)]="newDeptOrgId" required>
+        <form class="inline-form" (ngSubmit)="addDepartment()">
+          <select name="deptOrg" class="select" [(ngModel)]="newDeptOrgId" required>
             <option value="" disabled selected>Organization…</option>
             @for (org of organizations(); track org.id) {
               <option [value]="org.id">{{ org.name }}</option>
             }
           </select>
-          <input name="deptName" [(ngModel)]="newDeptName" placeholder="Department name" required />
-          <input name="deptDescription" [(ngModel)]="newDeptDescription" placeholder="Description" />
-          <button type="submit">Add department</button>
+          <input name="deptName" class="field" [(ngModel)]="newDeptName" placeholder="Department name" required />
+          <input name="deptDescription" class="field" [(ngModel)]="newDeptDescription" placeholder="Description" />
+          <button type="submit" class="btn btn-primary">Add department</button>
         </form>
       }
     </section>
@@ -81,28 +85,30 @@
 
   @if (activeTab() === 'designations') {
     <section>
-      <table>
-        <thead><tr><th>Title</th><th>Description</th><th></th></tr></thead>
-        <tbody>
-          @for (d of designations(); track d.id) {
-            <tr>
-              <td>{{ d.title }}</td>
-              <td>{{ d.description }}</td>
-              <td>
-                @if (auth.isAdmin()) {
-                  <button type="button" class="link-btn" (click)="removeDesignation(d.id)">Remove</button>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <div class="card">
+        <table class="data-table">
+          <thead><tr><th>Title</th><th>Description</th><th></th></tr></thead>
+          <tbody>
+            @for (d of designations(); track d.id) {
+              <tr>
+                <td>{{ d.title }}</td>
+                <td>{{ d.description }}</td>
+                <td>
+                  @if (auth.isAdmin()) {
+                    <button type="button" class="btn-link" (click)="removeDesignation(d.id)">Remove</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
       @if (auth.isAdmin()) {
-        <form class="add-form" (ngSubmit)="addDesignation()">
-          <input name="designationTitle" [(ngModel)]="newDesignationTitle" placeholder="Title (e.g. Software Engineer)" required />
-          <input name="designationDescription" [(ngModel)]="newDesignationDescription" placeholder="Description" />
-          <button type="submit">Add designation</button>
+        <form class="inline-form" (ngSubmit)="addDesignation()">
+          <input name="designationTitle" class="field" [(ngModel)]="newDesignationTitle" placeholder="Title (e.g. Software Engineer)" required />
+          <input name="designationDescription" class="field" [(ngModel)]="newDesignationDescription" placeholder="Description" />
+          <button type="submit" class="btn btn-primary">Add designation</button>
         </form>
       }
     </section>
@@ -110,36 +116,38 @@
 
   @if (activeTab() === 'grades') {
     <section>
-      <table>
-        <thead><tr><th>Name</th><th>Level</th><th>Description</th><th></th></tr></thead>
-        <tbody>
-          @for (g of grades(); track g.id) {
-            <tr>
-              <td>{{ g.name }}</td>
-              <td>{{ g.level }}</td>
-              <td>{{ g.description }}</td>
-              <td>
-                @if (auth.isAdmin()) {
-                  <button type="button" class="link-btn" (click)="removeGrade(g.id)">Remove</button>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <div class="card">
+        <table class="data-table">
+          <thead><tr><th>Name</th><th>Level</th><th>Description</th><th></th></tr></thead>
+          <tbody>
+            @for (g of grades(); track g.id) {
+              <tr>
+                <td>{{ g.name }}</td>
+                <td>{{ g.level }}</td>
+                <td>{{ g.description }}</td>
+                <td>
+                  @if (auth.isAdmin()) {
+                    <button type="button" class="btn-link" (click)="removeGrade(g.id)">Remove</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
       @if (auth.isAdmin()) {
-        <form class="add-form" (ngSubmit)="addGrade()">
-          <input name="gradeName" [(ngModel)]="newGradeName" placeholder="Grade name (e.g. L2)" required />
-          <input name="gradeLevel" type="number" [(ngModel)]="newGradeLevel" placeholder="Level" required />
-          <input name="gradeDescription" [(ngModel)]="newGradeDescription" placeholder="Description" />
-          <button type="submit">Add grade</button>
+        <form class="inline-form" (ngSubmit)="addGrade()">
+          <input name="gradeName" class="field" [(ngModel)]="newGradeName" placeholder="Grade name (e.g. L2)" required />
+          <input name="gradeLevel" class="field" type="number" [(ngModel)]="newGradeLevel" placeholder="Level" required />
+          <input name="gradeDescription" class="field" [(ngModel)]="newGradeDescription" placeholder="Description" />
+          <button type="submit" class="btn btn-primary">Add grade</button>
         </form>
       }
     </section>
   }
 
   @if (!auth.isAdmin()) {
-    <p class="hint">Sign in as an Admin to add or remove entries.</p>
+    <p class="admin-hint">Sign in as an Admin to add or remove entries.</p>
   }
 </div>

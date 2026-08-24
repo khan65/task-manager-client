@@ -1,0 +1,40 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">TM</span>
+      <span class="brand-name">Task Manager</span>
+    </div>
+
+    <nav class="nav">
+      @for (item of navItems; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="active" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path [attr.d]="item.icon" />
+          </svg>
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    @if (auth.currentUser(); as user) {
+      <div class="user-card">
+        <div class="user-avatar">{{ user.fullName.charAt(0) }}</div>
+        <div class="user-info">
+          <span class="user-name">{{ user.fullName }}</span>
+          <span class="user-role">{{ (user.roles ?? []).join(', ') || 'Member' }}</span>
+        </div>
+        <button type="button" class="signout-btn" (click)="signOut()" title="Sign out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <path d="M16 17l5-5-5-5" />
+            <path d="M21 12H9" />
+          </svg>
+        </button>
+      </div>
+    }
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

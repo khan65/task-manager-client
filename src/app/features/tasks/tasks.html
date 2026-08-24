@@ -1,54 +1,61 @@
-<div class="tasks-page">
-  <header>
-    <h1>Tasks</h1>
-    <select [(ngModel)]="selectedProjectId" (ngModelChange)="onProjectChange()">
-      @for (project of projects(); track project.id) {
-        <option [value]="project.id">{{ project.name }}</option>
-      }
-    </select>
-    <button type="button" class="add-toggle" (click)="showAddForm = !showAddForm">
-      {{ showAddForm ? 'Cancel' : '+ New task' }}
-    </button>
+<div class="page tasks-page">
+  <header class="page-head">
+    <div>
+      <h1>Tasks</h1>
+    </div>
+    <div class="head-actions">
+      <select class="select" [(ngModel)]="selectedProjectId" (ngModelChange)="onProjectChange()">
+        @for (project of projects(); track project.id) {
+          <option [value]="project.id">{{ project.name }}</option>
+        }
+      </select>
+      <button type="button" class="btn btn-primary" (click)="showAddForm = !showAddForm">
+        {{ showAddForm ? 'Cancel' : '+ New task' }}
+      </button>
+    </div>
   </header>
 
   @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
+    <p class="banner-error">{{ errorMessage() }}</p>
   }
 
   @if (showAddForm) {
-    <form class="add-form" (ngSubmit)="addTask()">
-      <input name="title" [(ngModel)]="newTitle" placeholder="Task title" required />
-      <input name="description" [(ngModel)]="newDescription" placeholder="Description" />
-      <select name="category" [(ngModel)]="newCategoryId" required>
+    <form class="card inline-form add-task-form" (ngSubmit)="addTask()">
+      <input name="title" class="field" [(ngModel)]="newTitle" placeholder="Task title" required />
+      <input name="description" class="field" [(ngModel)]="newDescription" placeholder="Description" />
+      <select name="category" class="select" [(ngModel)]="newCategoryId" required>
         <option value="" disabled selected>Category…</option>
         @for (cat of categories(); track cat.id) {
           <option [value]="cat.id">{{ cat.name }}</option>
         }
       </select>
-      <select name="subcategory" [(ngModel)]="newSubCategoryId">
+      <select name="subcategory" class="select" [(ngModel)]="newSubCategoryId">
         <option value="">No subcategory</option>
         @for (sub of subCategoriesForNewCategory(); track sub.id) {
           <option [value]="sub.id">{{ sub.name }}</option>
         }
       </select>
-      <select name="assignee" [(ngModel)]="newAssigneeId">
+      <select name="assignee" class="select" [(ngModel)]="newAssigneeId">
         <option value="">Unassigned</option>
         @for (user of users(); track user.id) {
           <option [value]="user.id">{{ user.fullName }}</option>
         }
       </select>
-      <input name="dueDate" type="date" [(ngModel)]="newDueDate" />
-      <button type="submit">Create task</button>
+      <input name="dueDate" class="field" type="date" [(ngModel)]="newDueDate" />
+      <button type="submit" class="btn btn-primary">Create task</button>
     </form>
   }
 
   <div class="board">
     @for (state of states(); track state.id) {
       <section class="column">
-        <h2>{{ state.name }} <span class="count">{{ tasksInState(state.id).length }}</span></h2>
+        <h2 [class]="'col-head col-' + stateKey(state.name)">
+          <span class="col-dot"></span>{{ state.name }}
+          <span class="count">{{ tasksInState(state.id).length }}</span>
+        </h2>
 
         @for (task of tasksInState(state.id); track task.id) {
-          <article class="task-card">
+          <article class="card task-card">
             <button type="button" class="task-title" (click)="toggleExpand(task)">{{ task.title }}</button>
             <p class="task-meta">
               {{ task.taskCategoryName }}@if (task.taskSubCategoryName) { · {{ task.taskSubCategoryName }} }
@@ -58,7 +65,7 @@
               @if (task.dueDate) { · due {{ task.dueDate | date: 'mediumDate' }} }
             </p>
 
-            <select class="move-select" [ngModel]="task.taskStateId" (ngModelChange)="moveTask(task, $event)">
+            <select class="select move-select" [ngModel]="task.taskStateId" (ngModelChange)="moveTask(task, $event)">
               @for (s of states(); track s.id) {
                 <option [value]="s.id">{{ s.name }}</option>
               }
@@ -74,12 +81,12 @@
                     <li><strong>{{ comment.authorName }}:</strong> {{ comment.message }}</li>
                   }
                   @empty {
-                    <li class="muted">No comments yet.</li>
+                    <li class="empty-note">No comments yet.</li>
                   }
                 </ul>
                 <form class="comment-form" (ngSubmit)="postComment(task)">
-                  <input name="comment" [(ngModel)]="newComment" placeholder="Add a comment…" />
-                  <button type="submit">Post</button>
+                  <input name="comment" class="field" [(ngModel)]="newComment" placeholder="Add a comment…" />
+                  <button type="submit" class="btn btn-secondary">Post</button>
                 </form>
 
                 <h3>History</h3>
@@ -98,15 +105,15 @@
                     <li>
                       <button type="button" class="attachment-link" (click)="downloadAttachment(file)">{{ file.fileName }}</button>
                       <span class="attachment-meta">{{ formatFileSize(file.sizeBytes) }} · {{ file.uploadedByUserName }}</span>
-                      <button type="button" class="link-btn small" (click)="removeAttachment(file)">Remove</button>
+                      <button type="button" class="btn-link" (click)="removeAttachment(file)">Remove</button>
                     </li>
                   } @empty {
-                    <li class="muted">No files attached.</li>
+                    <li class="empty-note">No files attached.</li>
                   }
                 </ul>
                 <input type="file" class="file-input" (change)="onFileSelected(task, $event)" />
 
-                <button type="button" class="link-btn" (click)="removeTask(task)">Remove task</button>
+                <button type="button" class="btn-link remove-task-btn" (click)="removeTask(task)">Remove task</button>
               </div>
             }
           </article>

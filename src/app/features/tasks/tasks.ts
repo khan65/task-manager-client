@@ -189,4 +189,8 @@ export class Tasks implements OnInit {
       if (this.expandedTaskId() === task.id) this.expandedTaskId.set(null);
     });
   }
+
+  stateKey(stateName: string): string {
+    return stateName.toLowerCase().replace(/\s+/g, '');
+  }
 }

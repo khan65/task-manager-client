@@ -1,103 +1,75 @@
-.tasks-page {
-  max-width: 1100px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  font-family: sans-serif;
-}
-
-header {
-  display: flex;
+.page-head {
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
 }
 
-header h1 {
-  margin: 0;
-}
-
-header select {
-  padding: 0.4rem 0.5rem;
-  border: 1px solid #ccd3d8;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
-.add-toggle {
-  margin-left: auto;
-  padding: 0.4rem 0.8rem;
-  background: #1d4e89;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.add-form {
+.head-actions {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  gap: 0.6rem;
   align-items: center;
-  border: 1px solid #e3e7ea;
-  border-radius: 6px;
-  padding: 0.8rem;
+}
+
+.add-task-form {
+  padding: 1rem;
   margin-bottom: 1.2rem;
-}
-
-.add-form input,
-.add-form select {
-  padding: 0.4rem 0.5rem;
-  border: 1px solid #ccd3d8;
-  border-radius: 4px;
-  font-size: 0.85rem;
-}
-
-.add-form button {
-  padding: 0.45rem 0.8rem;
-  background: #1d4e89;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(4, minmax(220px, 1fr));
-  gap: 0.9rem;
+  grid-template-columns: repeat(4, minmax(230px, 1fr));
+  gap: 1rem;
   overflow-x: auto;
 }
 
 .column {
-  background: #f4f6f8;
-  border-radius: 8px;
-  padding: 0.7rem;
-  min-width: 220px;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-lg);
+  padding: 0.8rem;
+  min-width: 230px;
 }
 
-.column h2 {
-  font-size: 0.85rem;
+.col-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: #556;
-  margin: 0 0 0.6rem;
-  display: flex;
-  justify-content: space-between;
+  color: var(--color-text-muted);
+  margin: 0 0 0.7rem;
+  padding: 0 0.1rem;
 }
 
-.column h2 .count {
-  color: #99a;
+.col-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.col-todo .col-dot {
+  background: var(--state-todo);
+}
+.col-inprogress .col-dot {
+  background: var(--state-inprogress);
+}
+.col-inreview .col-dot {
+  background: var(--state-inreview);
+}
+.col-done .col-dot {
+  background: var(--state-done);
+}
+
+.col-head .count {
+  margin-left: auto;
+  color: var(--color-text-faint);
   font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .task-card {
-  background: #fff;
-  border: 1px solid #e3e7ea;
-  border-radius: 6px;
-  padding: 0.6rem 0.7rem;
-  margin-bottom: 0.6rem;
+  padding: 0.75rem 0.85rem;
+  margin-bottom: 0.65rem;
 }
 
 .task-title {
@@ -106,133 +78,82 @@ header select {
   text-align: left;
   border: none;
   background: none;
+  font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.88rem;
+  font-size: 0.87rem;
+  color: var(--color-text);
   cursor: pointer;
   padding: 0;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
 }
 
 .task-meta {
-  font-size: 0.76rem;
-  color: #778;
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
   margin: 0.1rem 0;
 }
 
 .move-select {
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
   width: 100%;
-  padding: 0.25rem 0.3rem;
-  border: 1px solid #ccd3d8;
-  border-radius: 4px;
   font-size: 0.76rem;
+  padding: 0.3rem 0.5rem;
 }
 
 .task-detail {
   margin-top: 0.6rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid #eef1f3;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-border);
 }
 
 .task-description {
   font-size: 0.8rem;
-  color: #445;
-  margin: 0 0 0.5rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.6rem;
 }
 
 .task-detail h3 {
-  font-size: 0.72rem;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: #889;
-  margin: 0.5rem 0 0.3rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-faint);
+  margin: 0.6rem 0 0.35rem;
 }
 
 .discussion-list,
-.history-list {
+.history-list,
+.attachment-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.5rem;
   font-size: 0.78rem;
 }
 
 .discussion-list li,
-.history-list li {
-  padding: 0.2rem 0;
-  border-top: 1px solid #f0f2f4;
+.history-list li,
+.attachment-list li {
+  padding: 0.25rem 0;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text);
 }
 
 .discussion-list li:first-child,
-.history-list li:first-child {
+.history-list li:first-child,
+.attachment-list li:first-child {
   border-top: none;
-}
-
-.muted {
-  color: #99a;
-}
-
-.comment-form {
-  display: flex;
-  gap: 0.4rem;
-  margin-bottom: 0.3rem;
-}
-
-.comment-form input {
-  flex: 1;
-  padding: 0.3rem 0.4rem;
-  border: 1px solid #ccd3d8;
-  border-radius: 4px;
-  font-size: 0.78rem;
-}
-
-.comment-form button {
-  padding: 0.3rem 0.6rem;
-  background: #1d4e89;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.78rem;
-  cursor: pointer;
-}
-
-.link-btn {
-  border: none;
-  background: none;
-  color: #b3411f;
-  cursor: pointer;
-  font-size: 0.78rem;
-  padding: 0;
-  margin-top: 0.3rem;
-}
-
-.link-btn.small {
-  font-size: 0.7rem;
-  margin: 0;
-}
-
-.attachment-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0.4rem;
-  font-size: 0.78rem;
 }
 
 .attachment-list li {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.2rem 0;
-  border-top: 1px solid #f0f2f4;
-}
-
-.attachment-list li:first-child {
-  border-top: none;
 }
 
 .attachment-link {
   border: none;
   background: none;
-  color: #1d4e89;
+  color: var(--color-primary);
   cursor: pointer;
   font-size: 0.78rem;
   padding: 0;
@@ -240,18 +161,29 @@ header select {
 }
 
 .attachment-meta {
-  color: #99a;
+  color: var(--color-text-faint);
   font-size: 0.7rem;
   margin-left: auto;
 }
 
 .file-input {
-  font-size: 0.75rem;
-  margin-bottom: 0.3rem;
+  font-size: 0.74rem;
+  margin-bottom: 0.4rem;
 }
 
-.error {
-  color: #b3411f;
+.comment-form {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.comment-form input {
+  flex: 1;
+}
+
+.remove-task-btn {
+  display: block;
+  margin-top: 0.4rem;
 }
 
 @media (max-width: 900px) {

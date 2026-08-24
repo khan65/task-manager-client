@@ -1,33 +1,9 @@
-.users-page {
-  max-width: 760px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  font-family: sans-serif;
-}
-
-header {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
+.search-form {
   margin-bottom: 1rem;
 }
 
-header p {
-  color: #667;
-  margin: 0;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 0.6rem 0.5rem;
-  border-bottom: 1px solid #e3e7ea;
-  font-size: 0.9rem;
+.search-form input {
+  width: 280px;
 }
 
 .roles-cell {
@@ -36,84 +12,11 @@ td {
   flex-wrap: wrap;
 }
 
-.role-chip {
-  border: 1px solid #ccd3d8;
-  background: #fff;
-  border-radius: 999px;
-  padding: 0.2rem 0.7rem;
-  font-size: 0.8rem;
-  cursor: pointer;
-  color: #445;
-}
-
-.role-chip.active {
-  background: #1d4e89;
-  border-color: #1d4e89;
-  color: #fff;
-}
-
-.role-chip:disabled {
-  cursor: default;
-  opacity: 0.55;
-}
-
-.search-form {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.search-form input {
-  flex: 1;
-  padding: 0.4rem 0.5rem;
-  border: 1px solid #ccd3d8;
-  border-radius: 4px;
-  font-size: 0.85rem;
-}
-
-.search-form button {
-  padding: 0.4rem 0.8rem;
-  background: #1d4e89;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
 .pager {
   display: flex;
   align-items: center;
   gap: 0.8rem;
   margin-top: 1rem;
   font-size: 0.85rem;
-}
-
-.pager button {
-  padding: 0.3rem 0.7rem;
-  border: 1px solid #ccd3d8;
-  background: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.82rem;
-}
-
-.pager button:disabled {
-  cursor: default;
-  opacity: 0.5;
-}
-
-.muted {
-  color: #99a;
-  text-align: center;
-}
-
-.error {
-  color: #b3411f;
-}
-
-.hint {
-  margin-top: 1rem;
-  color: #667;
-  font-size: 0.85rem;
+  color: var(--color-text-muted);
 }

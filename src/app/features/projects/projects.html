@@ -1,13 +1,13 @@
-<div class="projects-page">
-  <header>
+<div class="page">
+  <header class="page-head">
     <h1>Projects</h1>
   </header>
 
   @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
+    <p class="banner-error">{{ errorMessage() }}</p>
   }
 
-  <nav class="tabs">
+  <nav class="tab-strip">
     <button type="button" [class.active]="activeTab() === 'projects'" (click)="setTab('projects')">Projects</button>
     <button type="button" [class.active]="activeTab() === 'project-types'" (click)="setTab('project-types')">Project Types</button>
   </nav>
@@ -15,10 +15,10 @@
   @if (activeTab() === 'projects') {
     <section>
       @for (project of projects(); track project.id) {
-        <article class="project-card">
+        <article class="card project-card">
           <div class="project-card-head">
             <h2>{{ project.name }}</h2>
-            <select [ngModel]="project.status" (ngModelChange)="setStatus(project, $event)" [disabled]="!auth.isAdmin()">
+            <select class="select status-select" [ngModel]="project.status" (ngModelChange)="setStatus(project, $event)" [disabled]="!auth.isAdmin()">
               @for (s of statuses; track s) {
                 <option [value]="s">{{ s }}</option>
               }
@@ -44,35 +44,35 @@
           </div>
 
           @if (auth.isAdmin()) {
-            <button type="button" class="link-btn" (click)="removeProject(project.id)">Remove project</button>
+            <button type="button" class="btn-link" (click)="removeProject(project.id)">Remove project</button>
           }
         </article>
       }
 
       @if (auth.isAdmin()) {
-        <form class="add-form" (ngSubmit)="addProject()">
-          <select name="projectClient" [(ngModel)]="newProjectClientId" required>
+        <form class="inline-form" (ngSubmit)="addProject()">
+          <select name="projectClient" class="select" [(ngModel)]="newProjectClientId" required>
             <option value="" disabled selected>Client…</option>
             @for (client of clients(); track client.id) {
               <option [value]="client.id">{{ client.name }}</option>
             }
           </select>
-          <select name="projectType" [(ngModel)]="newProjectTypeId" required>
+          <select name="projectType" class="select" [(ngModel)]="newProjectTypeId" required>
             <option value="" disabled selected>Project type…</option>
             @for (type of projectTypes(); track type.id) {
               <option [value]="type.id">{{ type.name }}</option>
             }
           </select>
-          <select name="projectStatus" [(ngModel)]="newProjectStatus">
+          <select name="projectStatus" class="select" [(ngModel)]="newProjectStatus">
             @for (s of statuses; track s) {
               <option [value]="s">{{ s }}</option>
             }
           </select>
-          <input name="projectName" [(ngModel)]="newProjectName" placeholder="Project name" required />
-          <input name="projectDescription" [(ngModel)]="newProjectDescription" placeholder="Description" />
-          <input name="projectStart" type="date" [(ngModel)]="newProjectStartDate" required />
-          <input name="projectEnd" type="date" [(ngModel)]="newProjectEndDate" />
-          <button type="submit">Add project</button>
+          <input name="projectName" class="field" [(ngModel)]="newProjectName" placeholder="Project name" required />
+          <input name="projectDescription" class="field" [(ngModel)]="newProjectDescription" placeholder="Description" />
+          <input name="projectStart" class="field" type="date" [(ngModel)]="newProjectStartDate" required />
+          <input name="projectEnd" class="field" type="date" [(ngModel)]="newProjectEndDate" />
+          <button type="submit" class="btn btn-primary">Add project</button>
         </form>
       }
     </section>
@@ -80,34 +80,36 @@
 
   @if (activeTab() === 'project-types') {
     <section>
-      <table>
-        <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
-        <tbody>
-          @for (type of projectTypes(); track type.id) {
-            <tr>
-              <td>{{ type.name }}</td>
-              <td>{{ type.description }}</td>
-              <td>
-                @if (auth.isAdmin()) {
-                  <button type="button" class="link-btn" (click)="removeProjectType(type.id)">Remove</button>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <div class="card">
+        <table class="data-table">
+          <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+          <tbody>
+            @for (type of projectTypes(); track type.id) {
+              <tr>
+                <td>{{ type.name }}</td>
+                <td>{{ type.description }}</td>
+                <td>
+                  @if (auth.isAdmin()) {
+                    <button type="button" class="btn-link" (click)="removeProjectType(type.id)">Remove</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
       @if (auth.isAdmin()) {
-        <form class="add-form" (ngSubmit)="addProjectType()">
-          <input name="typeName" [(ngModel)]="newTypeName" placeholder="Type name (e.g. Fixed Price)" required />
-          <input name="typeDescription" [(ngModel)]="newTypeDescription" placeholder="Description" />
-          <button type="submit">Add project type</button>
+        <form class="inline-form" (ngSubmit)="addProjectType()">
+          <input name="typeName" class="field" [(ngModel)]="newTypeName" placeholder="Type name (e.g. Fixed Price)" required />
+          <input name="typeDescription" class="field" [(ngModel)]="newTypeDescription" placeholder="Description" />
+          <button type="submit" class="btn btn-primary">Add project type</button>
         </form>
       }
     </section>
   }
 
   @if (!auth.isAdmin()) {
-    <p class="hint">Sign in as an Admin to add, remove, or edit entries.</p>
+    <p class="admin-hint">Sign in as an Admin to add, remove, or edit entries.</p>
   }
 </div>
