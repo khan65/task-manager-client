@@ -1,0 +1,62 @@
+.page-head {
+  align-items: center;
+}
+
+.head-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.table-card {
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.mono {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+}
+
+.text-faint {
+  color: var(--color-text-faint);
+  font-size: 0.8rem;
+}
+
+.status-select {
+  font-size: 0.78rem;
+  padding: 0.3rem 0.5rem;
+}
+
+.items-block {
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.7rem;
+  margin-top: 0.2rem;
+}
+
+.items-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 2fr 0.7fr 1fr auto;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+  align-items: center;
+}
+
+.qty-field,
+.price-field {
+  min-width: 0;
+}
+
+.add-item-btn {
+  margin-top: 0.2rem;
+}

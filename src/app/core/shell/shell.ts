@@ -23,6 +23,7 @@ export class Shell {
     { path: '/tasks', label: 'Tasks' },
     { path: '/projects', label: 'Projects' },
     { path: '/stakeholders', label: 'Stakeholders' },
+    { path: '/orders', label: 'Orders' },
     { path: '/employees', label: 'Employees' },
     { path: '/org-structure', label: 'Org Structure' },
     { path: '/users', label: 'Users' },

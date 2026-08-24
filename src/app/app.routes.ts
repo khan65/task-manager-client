@@ -37,6 +37,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/login-history/login-history').then((m) => m.LoginHistory),
       },
       {
+        path: 'orders',
+        loadComponent: () => import('./features/orders/orders').then((m) => m.Orders),
+      },
+      {
         path: 'projects',
         loadComponent: () => import('./features/projects/projects').then((m) => m.Projects),
       },
