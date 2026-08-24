@@ -57,6 +57,57 @@ td {
   opacity: 0.55;
 }
 
+.search-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.search-form input {
+  flex: 1;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccd3d8;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.search-form button {
+  padding: 0.4rem 0.8rem;
+  background: #1d4e89;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.pager button {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid #ccd3d8;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+.pager button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.muted {
+  color: #99a;
+  text-align: center;
+}
+
 .error {
   color: #b3411f;
 }

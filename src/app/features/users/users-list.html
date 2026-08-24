@@ -1,8 +1,13 @@
 <div class="users-page">
   <header>
     <h1>Users</h1>
-    <p>{{ users().length }} user(s)</p>
+    <p>{{ totalCount() }} user(s)</p>
   </header>
+
+  <form class="search-form" (ngSubmit)="search()">
+    <input name="search" [(ngModel)]="searchTerm" placeholder="Search by name or email…" />
+    <button type="submit">Search</button>
+  </form>
 
   @if (errorMessage()) {
     <p class="error">{{ errorMessage() }}</p>
@@ -36,9 +41,19 @@
             }
           </td>
         </tr>
+      } @empty {
+        <tr><td colspan="3" class="muted">No users match your search.</td></tr>
       }
     </tbody>
   </table>
+
+  @if (totalPages() > 1) {
+    <nav class="pager">
+      <button type="button" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">← Prev</button>
+      <span>Page {{ page() }} of {{ totalPages() }}</span>
+      <button type="button" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">Next →</button>
+    </nav>
+  }
 
   @if (!auth.isAdmin()) {
     <p class="hint">Sign in as an Admin to change role assignments.</p>
