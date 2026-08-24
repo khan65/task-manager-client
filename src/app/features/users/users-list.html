@@ -1,0 +1,46 @@
+<div class="users-page">
+  <header>
+    <h1>Users</h1>
+    <p>{{ users().length }} user(s)</p>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Roles</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+        <tr>
+          <td>{{ user.fullName }}</td>
+          <td>{{ user.email }}</td>
+          <td class="roles-cell">
+            @for (role of roles(); track role.id) {
+              <button
+                type="button"
+                class="role-chip"
+                [class.active]="hasRole(user, role.name)"
+                [disabled]="!auth.isAdmin()"
+                [title]="role.description"
+                (click)="toggleRole(user, role)"
+              >
+                {{ role.name }}
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (!auth.isAdmin()) {
+    <p class="hint">Sign in as an Admin to change role assignments.</p>
+  }
+</div>

@@ -12,4 +12,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
   },
+  {
+    path: 'users',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/users/users-list').then((m) => m.UsersList),
+  },
 ];

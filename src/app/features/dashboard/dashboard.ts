@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
+  imports: [RouterLink],
   templateUrl: './dashboard.html',
 })
 export class Dashboard {
