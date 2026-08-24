@@ -1,0 +1,113 @@
+<div class="projects-page">
+  <header>
+    <h1>Projects</h1>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  <nav class="tabs">
+    <button type="button" [class.active]="activeTab() === 'projects'" (click)="setTab('projects')">Projects</button>
+    <button type="button" [class.active]="activeTab() === 'project-types'" (click)="setTab('project-types')">Project Types</button>
+  </nav>
+
+  @if (activeTab() === 'projects') {
+    <section>
+      @for (project of projects(); track project.id) {
+        <article class="project-card">
+          <div class="project-card-head">
+            <h2>{{ project.name }}</h2>
+            <select [ngModel]="project.status" (ngModelChange)="setStatus(project, $event)" [disabled]="!auth.isAdmin()">
+              @for (s of statuses; track s) {
+                <option [value]="s">{{ s }}</option>
+              }
+            </select>
+          </div>
+          <p class="meta">{{ project.clientName }} · {{ project.projectTypeName }}@if (project.departmentName) { · {{ project.departmentName }} }</p>
+          <p class="description">{{ project.description }}</p>
+          <p class="dates">Starts {{ project.startDate | date: 'mediumDate' }}@if (project.endDate) { — ends {{ project.endDate | date: 'mediumDate' }} }</p>
+
+          <div class="chips-cell">
+            @for (user of users(); track user.id) {
+              <button
+                type="button"
+                class="chip"
+                [class.active]="isMember(project, user.id)"
+                [disabled]="!auth.isAdmin()"
+                [title]="user.email"
+                (click)="toggleMember(project, user)"
+              >
+                {{ user.fullName }}
+              </button>
+            }
+          </div>
+
+          @if (auth.isAdmin()) {
+            <button type="button" class="link-btn" (click)="removeProject(project.id)">Remove project</button>
+          }
+        </article>
+      }
+
+      @if (auth.isAdmin()) {
+        <form class="add-form" (ngSubmit)="addProject()">
+          <select name="projectClient" [(ngModel)]="newProjectClientId" required>
+            <option value="" disabled selected>Client…</option>
+            @for (client of clients(); track client.id) {
+              <option [value]="client.id">{{ client.name }}</option>
+            }
+          </select>
+          <select name="projectType" [(ngModel)]="newProjectTypeId" required>
+            <option value="" disabled selected>Project type…</option>
+            @for (type of projectTypes(); track type.id) {
+              <option [value]="type.id">{{ type.name }}</option>
+            }
+          </select>
+          <select name="projectStatus" [(ngModel)]="newProjectStatus">
+            @for (s of statuses; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+          <input name="projectName" [(ngModel)]="newProjectName" placeholder="Project name" required />
+          <input name="projectDescription" [(ngModel)]="newProjectDescription" placeholder="Description" />
+          <input name="projectStart" type="date" [(ngModel)]="newProjectStartDate" required />
+          <input name="projectEnd" type="date" [(ngModel)]="newProjectEndDate" />
+          <button type="submit">Add project</button>
+        </form>
+      }
+    </section>
+  }
+
+  @if (activeTab() === 'project-types') {
+    <section>
+      <table>
+        <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+          @for (type of projectTypes(); track type.id) {
+            <tr>
+              <td>{{ type.name }}</td>
+              <td>{{ type.description }}</td>
+              <td>
+                @if (auth.isAdmin()) {
+                  <button type="button" class="link-btn" (click)="removeProjectType(type.id)">Remove</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (auth.isAdmin()) {
+        <form class="add-form" (ngSubmit)="addProjectType()">
+          <input name="typeName" [(ngModel)]="newTypeName" placeholder="Type name (e.g. Fixed Price)" required />
+          <input name="typeDescription" [(ngModel)]="newTypeDescription" placeholder="Description" />
+          <button type="submit">Add project type</button>
+        </form>
+      }
+    </section>
+  }
+
+  @if (!auth.isAdmin()) {
+    <p class="hint">Sign in as an Admin to add, remove, or edit entries.</p>
+  }
+</div>
