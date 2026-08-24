@@ -27,9 +27,11 @@
 
         @for (task of tasksInState(state.id); track task.id) {
           <article class="card task-card">
+            <span class="task-code">{{ task.taskCode }}</span>
             <button type="button" class="task-title" (click)="toggleExpand(task)">{{ task.title }}</button>
             <p class="task-meta">
               {{ task.taskCategoryName }}@if (task.taskSubCategoryName) { · {{ task.taskSubCategoryName }} }
+              @if (task.priorityName) { · {{ task.priorityName }} }
             </p>
             <p class="task-meta">
               @if (task.assigneeName) { {{ task.assigneeName }} } @else { Unassigned }

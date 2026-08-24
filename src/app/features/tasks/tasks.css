@@ -15,8 +15,8 @@
 
 .board {
   display: grid;
-  grid-template-columns: repeat(4, minmax(230px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(6, minmax(200px, 1fr));
+  gap: 0.85rem;
   overflow-x: auto;
 }
 
@@ -24,7 +24,7 @@
   background: var(--color-surface-sunken);
   border-radius: var(--radius-lg);
   padding: 0.8rem;
-  min-width: 230px;
+  min-width: 200px;
 }
 
 .col-head {
@@ -46,17 +46,23 @@
   border-radius: 50%;
 }
 
-.col-todo .col-dot {
-  background: var(--state-todo);
+.col-new .col-dot {
+  background: var(--state-new);
 }
-.col-inprogress .col-dot {
-  background: var(--state-inprogress);
+.col-active .col-dot {
+  background: var(--state-active);
 }
-.col-inreview .col-dot {
-  background: var(--state-inreview);
+.col-restart .col-dot {
+  background: var(--state-restart);
 }
-.col-done .col-dot {
-  background: var(--state-done);
+.col-pause .col-dot {
+  background: var(--state-pause);
+}
+.col-tobeverified .col-dot {
+  background: var(--state-tobeverified);
+}
+.col-verified .col-dot {
+  background: var(--state-verified);
 }
 
 .col-head .count {
@@ -70,6 +76,14 @@
 .task-card {
   padding: 0.75rem 0.85rem;
   margin-bottom: 0.65rem;
+}
+
+.task-code {
+  display: block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: var(--color-text-faint);
+  margin-bottom: 0.15rem;
 }
 
 .task-title {

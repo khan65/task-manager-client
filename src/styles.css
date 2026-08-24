@@ -29,15 +29,21 @@
   --color-danger-soft: #fdeeee;
   --color-danger-soft-border: #f6cfcf;
 
-  /* task-state semantic scale — used by Kanban columns, dashboard chart, and anywhere a state is shown */
-  --state-todo: #8891a7;
-  --state-todo-soft: #eef0f5;
-  --state-inprogress: #2f6fed;
-  --state-inprogress-soft: #e9f0fe;
-  --state-inreview: #d97a06;
-  --state-inreview-soft: #fdf1e0;
-  --state-done: #12966a;
-  --state-done-soft: #e5f6ef;
+  /* task-state semantic scale — used by Kanban columns, dashboard chart, and anywhere a state is
+     shown. 6 states matching the real production workflow: New, Active, Restart, Pause,
+     To be Verified, Verified. ("Removed" is a soft-delete flag, not a workflow state.) */
+  --state-new: #8891a7;
+  --state-new-soft: #eef0f5;
+  --state-active: #2f6fed;
+  --state-active-soft: #e9f0fe;
+  --state-restart: #7c3aed;
+  --state-restart-soft: #f1eafe;
+  --state-pause: #9a6b1a;
+  --state-pause-soft: #faf1de;
+  --state-tobeverified: #d97a06;
+  --state-tobeverified-soft: #fdf1e0;
+  --state-verified: #12966a;
+  --state-verified-soft: #e5f6ef;
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -251,21 +257,29 @@ table {
   border-radius: 50%;
   background: currentColor;
 }
-.state-todo-badge {
-  background: var(--state-todo-soft);
-  color: var(--state-todo);
+.state-new-badge {
+  background: var(--state-new-soft);
+  color: var(--state-new);
 }
-.state-inprogress-badge {
-  background: var(--state-inprogress-soft);
-  color: var(--state-inprogress);
+.state-active-badge {
+  background: var(--state-active-soft);
+  color: var(--state-active);
 }
-.state-inreview-badge {
-  background: var(--state-inreview-soft);
-  color: var(--state-inreview);
+.state-restart-badge {
+  background: var(--state-restart-soft);
+  color: var(--state-restart);
 }
-.state-done-badge {
-  background: var(--state-done-soft);
-  color: var(--state-done);
+.state-pause-badge {
+  background: var(--state-pause-soft);
+  color: var(--state-pause);
+}
+.state-tobeverified-badge {
+  background: var(--state-tobeverified-soft);
+  color: var(--state-tobeverified);
+}
+.state-verified-badge {
+  background: var(--state-verified-soft);
+  color: var(--state-verified);
 }
 
 /* ============================================================

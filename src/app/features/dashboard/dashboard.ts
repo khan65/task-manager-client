@@ -12,10 +12,12 @@ interface DonutSegment {
 }
 
 const STATE_COLORS: Record<string, string> = {
-  'To Do': 'var(--state-todo)',
-  'In Progress': 'var(--state-inprogress)',
-  'In Review': 'var(--state-inreview)',
-  Done: 'var(--state-done)',
+  New: 'var(--state-new)',
+  Active: 'var(--state-active)',
+  Restart: 'var(--state-restart)',
+  Pause: 'var(--state-pause)',
+  'To be Verified': 'var(--state-tobeverified)',
+  Verified: 'var(--state-verified)',
 };
 
 const RADIUS = 54;

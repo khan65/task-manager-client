@@ -20,6 +20,10 @@ export interface UpsertTaskPayload {
   projectId: string;
   taskCategoryId: string;
   taskSubCategoryId: string | null;
+  taskTypeId?: string | null;
+  taskRoleId?: string | null;
+  priorityId?: string | null;
+  taskFrequencyId?: string | null;
   assigneeId: string | null;
   dueDate: string | null;
 }
