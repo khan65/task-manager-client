@@ -9,13 +9,14 @@ import { AuthService } from '../auth/auth.service';
   styleUrl: './shell.css',
 })
 export class Shell {
-  // Setup / Employee / Product / Login History / Reports join this bar once their
-  // modules land — Org Structure stands in for Setup until then.
+  // Setup / Product / Login History / Reports join this bar once their modules land
+  // — Org Structure stands in for Setup until then.
   readonly navItems = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/tasks', label: 'Tasks' },
     { path: '/projects', label: 'Projects' },
     { path: '/stakeholders', label: 'Stakeholders' },
+    { path: '/employees', label: 'Employees' },
     { path: '/org-structure', label: 'Org Structure' },
     { path: '/users', label: 'Users' },
   ];

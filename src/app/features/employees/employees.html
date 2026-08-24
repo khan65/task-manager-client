@@ -1,0 +1,111 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <h1>Employees</h1>
+      <span class="count">{{ employees().length }} total</span>
+    </div>
+    <div class="head-actions">
+      @if (auth.isAdmin()) {
+        <button type="button" class="btn btn-primary" (click)="showAddForm.set(true)">+ Add</button>
+      }
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="banner-error">{{ errorMessage() }}</p>
+  }
+
+  <div class="card table-card">
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Department</th>
+            <th>Designation</th>
+            <th>Grade</th>
+            <th>Joined</th>
+            <th>Status</th>
+            <th>Login account</th>
+            @if (auth.isAdmin()) { <th></th> }
+          </tr>
+        </thead>
+        <tbody>
+          @for (employee of employees(); track employee.id) {
+            <tr>
+              <td>{{ employee.fullName }}</td>
+              <td>{{ employee.email || '—' }}</td>
+              <td>{{ employee.phone || '—' }}</td>
+              <td>{{ employee.departmentName }}</td>
+              <td>{{ employee.designationTitle }}</td>
+              <td>{{ employee.gradeName }}</td>
+              <td>{{ employee.joiningDate | date: 'mediumDate' }}</td>
+              <td>
+                <span class="chip" [class.active]="employee.isActive">{{ employee.isActive ? 'Active' : 'Inactive' }}</span>
+              </td>
+              <td>{{ employee.userFullName ?? 'No login' }}</td>
+              @if (auth.isAdmin()) {
+                <td><button type="button" class="btn-link" (click)="removeEmployee(employee)">Remove</button></td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="10" class="empty-note">No employees yet.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <app-modal [open]="showAddForm()" title="Add Employee" (closed)="showAddForm.set(false)">
+    <form class="modal-form" (ngSubmit)="addEmployee()">
+      <label>Full name<input name="fullName" class="field" [(ngModel)]="newFullName" required /></label>
+      <label>Email<input name="email" class="field" type="email" [(ngModel)]="newEmail" /></label>
+      <label>Phone<input name="phone" class="field" [(ngModel)]="newPhone" /></label>
+      <label>Joining date<input name="joiningDate" class="field" type="date" [(ngModel)]="newJoiningDate" required /></label>
+      <label>
+        Department
+        <select name="department" class="select" [(ngModel)]="newDepartmentId" required>
+          <option value="" disabled selected>Department…</option>
+          @for (d of departments(); track d.id) {
+            <option [value]="d.id">{{ d.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Designation
+        <select name="designation" class="select" [(ngModel)]="newDesignationId" required>
+          <option value="" disabled selected>Designation…</option>
+          @for (d of designations(); track d.id) {
+            <option [value]="d.id">{{ d.title }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Grade
+        <select name="grade" class="select" [(ngModel)]="newGradeId" required>
+          <option value="" disabled selected>Grade…</option>
+          @for (g of grades(); track g.id) {
+            <option [value]="g.id">{{ g.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Login account
+        <select name="user" class="select" [(ngModel)]="newUserId">
+          <option value="">No login account</option>
+          @for (u of users(); track u.id) {
+            <option [value]="u.id">{{ u.fullName }} ({{ u.email }})</option>
+          }
+        </select>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="showAddForm.set(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add employee</button>
+      </div>
+    </form>
+  </app-modal>
+</div>
