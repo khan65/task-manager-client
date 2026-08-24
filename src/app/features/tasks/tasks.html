@@ -92,6 +92,20 @@
                   }
                 </ul>
 
+                <h3>Attachments</h3>
+                <ul class="attachment-list">
+                  @for (file of attachments(); track file.id) {
+                    <li>
+                      <button type="button" class="attachment-link" (click)="downloadAttachment(file)">{{ file.fileName }}</button>
+                      <span class="attachment-meta">{{ formatFileSize(file.sizeBytes) }} · {{ file.uploadedByUserName }}</span>
+                      <button type="button" class="link-btn small" (click)="removeAttachment(file)">Remove</button>
+                    </li>
+                  } @empty {
+                    <li class="muted">No files attached.</li>
+                  }
+                </ul>
+                <input type="file" class="file-input" (change)="onFileSelected(task, $event)" />
+
                 <button type="button" class="link-btn" (click)="removeTask(task)">Remove task</button>
               </div>
             }

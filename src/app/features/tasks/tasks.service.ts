@@ -2,7 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ProjectTask, TaskCategory, TaskDiscussion, TaskState, TaskStateHistoryEntry, TaskSubCategory } from './tasks.models';
+import {
+  ProjectTask,
+  TaskAttachment,
+  TaskCategory,
+  TaskDiscussion,
+  TaskState,
+  TaskStateHistoryEntry,
+  TaskSubCategory,
+} from './tasks.models';
 
 const base = environment.apiBaseUrl;
 
@@ -60,5 +68,20 @@ export class TasksService {
   }
   addDiscussion(taskId: string, message: string): Observable<TaskDiscussion> {
     return this.http.post<TaskDiscussion>(`${base}/tasks/${taskId}/discussions`, { message });
+  }
+
+  getAttachments(taskId: string): Observable<TaskAttachment[]> {
+    return this.http.get<TaskAttachment[]>(`${base}/tasks/${taskId}/attachments`);
+  }
+  uploadAttachment(taskId: string, file: File): Observable<TaskAttachment> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<TaskAttachment>(`${base}/tasks/${taskId}/attachments`, formData);
+  }
+  downloadAttachment(attachmentId: string): Observable<Blob> {
+    return this.http.get(`${base}/tasks/attachments/${attachmentId}/download`, { responseType: 'blob' });
+  }
+  deleteAttachment(attachmentId: string): Observable<void> {
+    return this.http.delete<void>(`${base}/tasks/attachments/${attachmentId}`);
   }
 }

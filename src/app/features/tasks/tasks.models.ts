@@ -55,3 +55,14 @@ export interface TaskDiscussion {
   message: string;
   createdAt: string;
 }
+
+export interface TaskAttachment {
+  id: string;
+  projectTaskId: string;
+  fileName: string;
+  contentType: string;
+  sizeBytes: number;
+  uploadedByUserId: string;
+  uploadedByUserName: string;
+  uploadedAt: string;
+}

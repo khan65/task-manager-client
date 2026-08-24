@@ -7,7 +7,15 @@ import { Project } from '../projects/projects.models';
 import { UsersService } from '../users/users.service';
 import { UserSummary } from '../users/users.models';
 import { TasksService } from './tasks.service';
-import { ProjectTask, TaskCategory, TaskDiscussion, TaskState, TaskStateHistoryEntry, TaskSubCategory } from './tasks.models';
+import {
+  ProjectTask,
+  TaskAttachment,
+  TaskCategory,
+  TaskDiscussion,
+  TaskState,
+  TaskStateHistoryEntry,
+  TaskSubCategory,
+} from './tasks.models';
 
 @Component({
   selector: 'app-tasks',
@@ -29,6 +37,7 @@ export class Tasks implements OnInit {
   readonly expandedTaskId = signal<string | null>(null);
   readonly discussions = signal<TaskDiscussion[]>([]);
   readonly stateHistory = signal<TaskStateHistoryEntry[]>([]);
+  readonly attachments = signal<TaskAttachment[]>([]);
   newComment = '';
 
   showAddForm = false;
@@ -93,6 +102,45 @@ export class Tasks implements OnInit {
     this.expandedTaskId.set(task.id);
     this.tasksService.getDiscussions(task.id).subscribe((v) => this.discussions.set(v));
     this.tasksService.getStateHistory(task.id).subscribe((v) => this.stateHistory.set(v));
+    this.tasksService.getAttachments(task.id).subscribe((v) => this.attachments.set(v));
+  }
+
+  onFileSelected(task: ProjectTask, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.tasksService.uploadAttachment(task.id, file).subscribe({
+      next: (attachment) => this.attachments.update((list) => [attachment, ...list]),
+      error: () => this.errorMessage.set('Could not upload file (max 25 MB).'),
+    });
+    input.value = '';
+  }
+
+  downloadAttachment(attachment: TaskAttachment): void {
+    this.tasksService.downloadAttachment(attachment.id).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = attachment.fileName;
+        a.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => this.errorMessage.set('Could not download file.'),
+    });
+  }
+
+  removeAttachment(attachment: TaskAttachment): void {
+    this.tasksService.deleteAttachment(attachment.id).subscribe(() =>
+      this.attachments.update((list) => list.filter((a) => a.id !== attachment.id)),
+    );
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 
   postComment(task: ProjectTask): void {

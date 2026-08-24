@@ -205,6 +205,51 @@ header select {
   margin-top: 0.3rem;
 }
 
+.link-btn.small {
+  font-size: 0.7rem;
+  margin: 0;
+}
+
+.attachment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+}
+
+.attachment-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0;
+  border-top: 1px solid #f0f2f4;
+}
+
+.attachment-list li:first-child {
+  border-top: none;
+}
+
+.attachment-link {
+  border: none;
+  background: none;
+  color: #1d4e89;
+  cursor: pointer;
+  font-size: 0.78rem;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.attachment-meta {
+  color: #99a;
+  font-size: 0.7rem;
+  margin-left: auto;
+}
+
+.file-input {
+  font-size: 0.75rem;
+  margin-bottom: 0.3rem;
+}
+
 .error {
   color: #b3411f;
 }
