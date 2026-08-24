@@ -1,14 +1,105 @@
-<div style="padding: 2rem; font-family: sans-serif;">
-  <h1>Dashboard</h1>
-  @if (auth.currentUser(); as user) {
-    <p>Signed in as <strong>{{ user.fullName }}</strong> ({{ user.email }}) — {{ (user.roles ?? []).join(', ') || 'no roles' }}</p>
-  }
-  <nav style="display: flex; gap: 1rem; margin: 1rem 0;">
+<div class="dashboard-page">
+  <header class="page-header">
+    <div>
+      <h1>Dashboard</h1>
+      @if (auth.currentUser(); as user) {
+        <p class="signed-in-as">
+          Signed in as <strong>{{ user.fullName }}</strong> ({{ user.email }}) — {{ (user.roles ?? []).join(', ') || 'no roles' }}
+        </p>
+      }
+    </div>
+    <button type="button" class="signout-btn" (click)="signOut()">Sign out</button>
+  </header>
+
+  <nav class="module-nav">
     <a routerLink="/users">Users</a>
     <a routerLink="/org-structure">Org Structure</a>
     <a routerLink="/clients">Clients</a>
     <a routerLink="/projects">Projects</a>
     <a routerLink="/tasks">Tasks</a>
   </nav>
-  <button (click)="signOut()">Sign out</button>
+
+  @if (summary(); as s) {
+    <section class="stat-tiles">
+      <div class="stat-tile">
+        <span class="stat-value">{{ s.activeProjects }}</span>
+        <span class="stat-label">Active projects</span>
+        <span class="stat-sub">{{ s.totalProjects }} total</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-value">{{ s.totalTasks }}</span>
+        <span class="stat-label">Tasks</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-value">{{ s.totalClients }}</span>
+        <span class="stat-label">Clients</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-value">{{ s.totalUsers }}</span>
+        <span class="stat-label">Users</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Tasks by state</h2>
+      <div class="state-bars">
+        @for (state of s.tasksByState; track state.stateName) {
+          <div class="state-bar-row">
+            <span class="state-bar-label">{{ state.stateName }}</span>
+            <div class="state-bar-track">
+              <div class="state-bar-fill" [style.width.%]="(state.count / maxStateCount()) * 100"></div>
+            </div>
+            <span class="state-bar-count">{{ state.count }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <div class="panel-grid">
+      <section class="panel">
+        <h2>My open tasks</h2>
+        <ul class="task-list">
+          @for (task of s.myOpenTasks; track task.id) {
+            <li>
+              <span class="task-title">{{ task.title }}</span>
+              <span class="task-sub">{{ task.projectName }} · {{ task.taskStateName }}@if (task.dueDate) { · due {{ task.dueDate | date: 'mediumDate' }} }</span>
+            </li>
+          } @empty {
+            <li class="muted">Nothing assigned to you right now.</li>
+          }
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>Upcoming due (14 days)</h2>
+        <ul class="task-list">
+          @for (task of s.upcomingDueTasks; track task.id) {
+            <li>
+              <span class="task-title">{{ task.title }}</span>
+              <span class="task-sub">{{ task.projectName }} · {{ task.assigneeName ?? 'Unassigned' }} · due {{ task.dueDate | date: 'mediumDate' }}</span>
+            </li>
+          } @empty {
+            <li class="muted">Nothing due soon.</li>
+          }
+        </ul>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>Recent activity</h2>
+      <ul class="activity-list">
+        @for (entry of s.recentActivity; track entry.taskId + entry.changedAt) {
+          <li>
+            <strong>{{ entry.changedByUserName }}</strong> moved <strong>{{ entry.taskTitle }}</strong>
+            {{ entry.fromStateName ?? 'created' }} → {{ entry.toStateName }}
+            <span class="activity-time">{{ entry.changedAt | date: 'short' }}</span>
+          </li>
+        } @empty {
+          <li class="muted">No activity yet.</li>
+        }
+      </ul>
+    </section>
+  } @else {
+    <p class="muted">Loading dashboard…</p>
+  }
 </div>
