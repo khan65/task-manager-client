@@ -25,8 +25,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/org-structure/org-structure').then((m) => m.OrgStructure),
       },
       {
-        path: 'clients',
-        loadComponent: () => import('./features/clients/clients').then((m) => m.Clients),
+        path: 'stakeholders',
+        loadComponent: () => import('./features/stakeholders/stakeholders').then((m) => m.Stakeholders),
       },
       {
         path: 'projects',

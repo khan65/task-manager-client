@@ -22,8 +22,8 @@ export interface Project {
   endDate: string | null;
   status: ProjectStatus;
   createdAt: string;
-  clientId: string;
-  clientName: string;
+  stakeholderId: string;
+  stakeholderName: string;
   projectTypeId: string;
   projectTypeName: string;
   departmentId: string | null;

@@ -26,7 +26,7 @@ export interface DashboardSummary {
   activeProjects: number;
   totalTasks: number;
   tasksByState: TaskStateCount[];
-  totalClients: number;
+  totalStakeholders: number;
   totalUsers: number;
   myOpenTasks: DashboardTaskSummary[];
   upcomingDueTasks: DashboardTaskSummary[];

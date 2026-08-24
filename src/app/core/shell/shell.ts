@@ -9,14 +9,13 @@ import { AuthService } from '../auth/auth.service';
   styleUrl: './shell.css',
 })
 export class Shell {
-  // Setup / Employee / Stakeholder / Product / Login History / Reports join this bar
-  // once their modules land (Phase 10 in the blueprint) — Clients stands in for
-  // Stakeholder and Org Structure for Setup until then.
+  // Setup / Employee / Product / Login History / Reports join this bar once their
+  // modules land — Org Structure stands in for Setup until then.
   readonly navItems = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/tasks', label: 'Tasks' },
     { path: '/projects', label: 'Projects' },
-    { path: '/clients', label: 'Clients' },
+    { path: '/stakeholders', label: 'Stakeholders' },
     { path: '/org-structure', label: 'Org Structure' },
     { path: '/users', label: 'Users' },
   ];

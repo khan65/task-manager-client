@@ -3,8 +3,8 @@ import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 import { Modal } from '../../core/ui/modal/modal';
-import { ClientsService } from '../clients/clients.service';
-import { ClientRecord } from '../clients/clients.models';
+import { StakeholdersService } from '../stakeholders/stakeholders.service';
+import { Stakeholder } from '../stakeholders/stakeholders.models';
 import { UsersService } from '../users/users.service';
 import { UserSummary } from '../users/users.models';
 import { ProjectsService } from './projects.service';
@@ -25,7 +25,7 @@ export class Projects implements OnInit {
 
   readonly projects = signal<Project[]>([]);
   readonly projectTypes = signal<ProjectType[]>([]);
-  readonly clients = signal<ClientRecord[]>([]);
+  readonly stakeholders = signal<Stakeholder[]>([]);
   readonly users = signal<UserSummary[]>([]);
   readonly errorMessage = signal<string | null>(null);
 
@@ -34,7 +34,7 @@ export class Projects implements OnInit {
 
   newProjectName = '';
   newProjectDescription = '';
-  newProjectClientId = '';
+  newProjectStakeholderId = '';
   newProjectTypeId = '';
   newProjectDepartmentId = '';
   newProjectStartDate = '';
@@ -43,7 +43,7 @@ export class Projects implements OnInit {
 
   constructor(
     private readonly projectsService: ProjectsService,
-    private readonly clientsService: ClientsService,
+    private readonly stakeholdersService: StakeholdersService,
     private readonly usersService: UsersService,
     protected readonly auth: AuthService,
   ) {}
@@ -63,7 +63,7 @@ export class Projects implements OnInit {
   reloadAll(): void {
     this.projectsService.getProjects().subscribe((v) => this.projects.set(v));
     this.projectsService.getProjectTypes().subscribe((v) => this.projectTypes.set(v));
-    this.clientsService.getClients().subscribe((v) => this.clients.set(v));
+    this.stakeholdersService.getStakeholders().subscribe((v) => this.stakeholders.set(v));
     this.usersService.getUsers().subscribe((v) => this.users.set(v));
   }
 
@@ -85,15 +85,15 @@ export class Projects implements OnInit {
   }
 
   addProject(): void {
-    if (!this.newProjectClientId || !this.newProjectTypeId || !this.newProjectStartDate) {
-      this.errorMessage.set('Client, project type, and start date are required.');
+    if (!this.newProjectStakeholderId || !this.newProjectTypeId || !this.newProjectStartDate) {
+      this.errorMessage.set('Stakeholder, project type, and start date are required.');
       return;
     }
     this.projectsService
       .createProject({
         name: this.newProjectName,
         description: this.newProjectDescription,
-        clientId: this.newProjectClientId,
+        stakeholderId: this.newProjectStakeholderId,
         projectTypeId: this.newProjectTypeId,
         departmentId: null,
         startDate: new Date(this.newProjectStartDate).toISOString(),
@@ -123,7 +123,7 @@ export class Projects implements OnInit {
       .updateProject(project.id, {
         name: project.name,
         description: project.description,
-        clientId: project.clientId,
+        stakeholderId: project.stakeholderId,
         projectTypeId: project.projectTypeId,
         departmentId: project.departmentId,
         startDate: project.startDate,

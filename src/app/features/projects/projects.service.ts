@@ -9,7 +9,7 @@ const base = environment.apiBaseUrl;
 export interface UpsertProjectPayload {
   name: string;
   description: string;
-  clientId: string;
+  stakeholderId: string;
   projectTypeId: string;
   departmentId: string | null;
   startDate: string;

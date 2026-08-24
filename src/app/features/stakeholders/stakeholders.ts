@@ -2,13 +2,13 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 import { Modal } from '../../core/ui/modal/modal';
-import { ClientsService } from './clients.service';
-import { ClientCategory, ClientRecord, Contact, ContactGroup, Product } from './clients.models';
+import { StakeholdersService } from './stakeholders.service';
+import { StakeholderCategory, Stakeholder, Contact, ContactGroup, Product } from './stakeholders.models';
 
-type Tab = 'categories' | 'products' | 'contact-groups' | 'clients' | 'contacts';
+type Tab = 'categories' | 'products' | 'contact-groups' | 'stakeholders' | 'contacts';
 
 const TAB_LABELS: Record<Tab, string> = {
-  clients: 'Client',
+  stakeholders: 'Stakeholder',
   contacts: 'Contact',
   categories: 'Category',
   products: 'Product',
@@ -16,19 +16,19 @@ const TAB_LABELS: Record<Tab, string> = {
 };
 
 @Component({
-  selector: 'app-clients',
+  selector: 'app-stakeholders',
   imports: [FormsModule, Modal],
-  templateUrl: './clients.html',
-  styleUrl: './clients.css',
+  templateUrl: './stakeholders.html',
+  styleUrl: './stakeholders.css',
 })
-export class Clients implements OnInit {
-  readonly activeTab = signal<Tab>('clients');
+export class Stakeholders implements OnInit {
+  readonly activeTab = signal<Tab>('stakeholders');
   readonly showAddModal = signal(false);
 
-  readonly categories = signal<ClientCategory[]>([]);
+  readonly categories = signal<StakeholderCategory[]>([]);
   readonly products = signal<Product[]>([]);
   readonly contactGroups = signal<ContactGroup[]>([]);
-  readonly clients = signal<ClientRecord[]>([]);
+  readonly stakeholders = signal<Stakeholder[]>([]);
   readonly contacts = signal<Contact[]>([]);
   readonly errorMessage = signal<string | null>(null);
 
@@ -38,17 +38,17 @@ export class Clients implements OnInit {
   newProductDescription = '';
   newGroupName = '';
   newGroupDescription = '';
-  newClientName = '';
-  newClientDescription = '';
-  newClientCategoryId = '';
+  newStakeholderName = '';
+  newStakeholderDescription = '';
+  newStakeholderCategoryId = '';
   newContactName = '';
   newContactEmail = '';
   newContactPhone = '';
-  newContactClientId = '';
+  newContactStakeholderId = '';
   newContactGroupId = '';
 
   constructor(
-    private readonly clientsService: ClientsService,
+    private readonly stakeholdersService: StakeholdersService,
     protected readonly auth: AuthService,
   ) {}
 
@@ -65,32 +65,32 @@ export class Clients implements OnInit {
   }
 
   reloadAll(): void {
-    this.clientsService.getClientCategories().subscribe((v) => this.categories.set(v));
-    this.clientsService.getProducts().subscribe((v) => this.products.set(v));
-    this.clientsService.getContactGroups().subscribe((v) => this.contactGroups.set(v));
-    this.clientsService.getClients().subscribe((v) => this.clients.set(v));
-    this.clientsService.getContacts().subscribe((v) => this.contacts.set(v));
+    this.stakeholdersService.getStakeholderCategories().subscribe((v) => this.categories.set(v));
+    this.stakeholdersService.getProducts().subscribe((v) => this.products.set(v));
+    this.stakeholdersService.getContactGroups().subscribe((v) => this.contactGroups.set(v));
+    this.stakeholdersService.getStakeholders().subscribe((v) => this.stakeholders.set(v));
+    this.stakeholdersService.getContacts().subscribe((v) => this.contacts.set(v));
   }
 
   addCategory(): void {
-    this.clientsService.createClientCategory(this.newCategoryName, this.newCategoryDescription).subscribe({
+    this.stakeholdersService.createStakeholderCategory(this.newCategoryName, this.newCategoryDescription).subscribe({
       next: (c) => {
         this.categories.update((list) => [...list, c]);
         this.newCategoryName = '';
         this.newCategoryDescription = '';
         this.showAddModal.set(false);
       },
-      error: () => this.errorMessage.set('Could not create client category.'),
+      error: () => this.errorMessage.set('Could not create stakeholder category.'),
     });
   }
   removeCategory(id: string): void {
-    this.clientsService.deleteClientCategory(id).subscribe(() =>
+    this.stakeholdersService.deleteStakeholderCategory(id).subscribe(() =>
       this.categories.update((list) => list.filter((c) => c.id !== id)),
     );
   }
 
   addProduct(): void {
-    this.clientsService.createProduct(this.newProductName, this.newProductDescription).subscribe({
+    this.stakeholdersService.createProduct(this.newProductName, this.newProductDescription).subscribe({
       next: (p) => {
         this.products.update((list) => [...list, p]);
         this.newProductName = '';
@@ -101,13 +101,13 @@ export class Clients implements OnInit {
     });
   }
   removeProduct(id: string): void {
-    this.clientsService.deleteProduct(id).subscribe(() =>
+    this.stakeholdersService.deleteProduct(id).subscribe(() =>
       this.products.update((list) => list.filter((p) => p.id !== id)),
     );
   }
 
   addContactGroup(): void {
-    this.clientsService.createContactGroup(this.newGroupName, this.newGroupDescription).subscribe({
+    this.stakeholdersService.createContactGroup(this.newGroupName, this.newGroupDescription).subscribe({
       next: (g) => {
         this.contactGroups.update((list) => [...list, g]);
         this.newGroupName = '';
@@ -118,58 +118,58 @@ export class Clients implements OnInit {
     });
   }
   removeContactGroup(id: string): void {
-    this.clientsService.deleteContactGroup(id).subscribe(() =>
+    this.stakeholdersService.deleteContactGroup(id).subscribe(() =>
       this.contactGroups.update((list) => list.filter((g) => g.id !== id)),
     );
   }
 
-  addClient(): void {
-    if (!this.newClientCategoryId) {
-      this.errorMessage.set('Pick a client category first.');
+  addStakeholder(): void {
+    if (!this.newStakeholderCategoryId) {
+      this.errorMessage.set('Pick a stakeholder category first.');
       return;
     }
-    this.clientsService.createClient(this.newClientName, this.newClientDescription, this.newClientCategoryId).subscribe({
+    this.stakeholdersService.createStakeholder(this.newStakeholderName, this.newStakeholderDescription, this.newStakeholderCategoryId).subscribe({
       next: (c) => {
-        this.clients.update((list) => [...list, c]);
-        this.newClientName = '';
-        this.newClientDescription = '';
+        this.stakeholders.update((list) => [...list, c]);
+        this.newStakeholderName = '';
+        this.newStakeholderDescription = '';
         this.showAddModal.set(false);
       },
-      error: () => this.errorMessage.set('Could not create client.'),
+      error: () => this.errorMessage.set('Could not create stakeholder.'),
     });
   }
-  removeClient(id: string): void {
-    this.clientsService.deleteClient(id).subscribe(() =>
-      this.clients.update((list) => list.filter((c) => c.id !== id)),
+  removeStakeholder(id: string): void {
+    this.stakeholdersService.deleteStakeholder(id).subscribe(() =>
+      this.stakeholders.update((list) => list.filter((c) => c.id !== id)),
     );
   }
 
-  hasProduct(client: ClientRecord, productName: string): boolean {
-    return client.products.includes(productName);
+  hasProduct(stakeholder: Stakeholder, productName: string): boolean {
+    return stakeholder.products.includes(productName);
   }
 
-  toggleProduct(client: ClientRecord, product: Product): void {
-    const action = this.hasProduct(client, product.name)
-      ? this.clientsService.removeProduct(client.id, product.id)
-      : this.clientsService.assignProduct(client.id, product.id);
+  toggleProduct(stakeholder: Stakeholder, product: Product): void {
+    const action = this.hasProduct(stakeholder, product.name)
+      ? this.stakeholdersService.removeProduct(stakeholder.id, product.id)
+      : this.stakeholdersService.assignProduct(stakeholder.id, product.id);
 
     action.subscribe({
-      next: (updated) => this.clients.update((list) => list.map((c) => (c.id === updated.id ? updated : c))),
+      next: (updated) => this.stakeholders.update((list) => list.map((c) => (c.id === updated.id ? updated : c))),
       error: () => this.errorMessage.set('Could not update product association.'),
     });
   }
 
   addContact(): void {
-    if (!this.newContactClientId) {
-      this.errorMessage.set('Pick a client first.');
+    if (!this.newContactStakeholderId) {
+      this.errorMessage.set('Pick a stakeholder first.');
       return;
     }
-    this.clientsService
+    this.stakeholdersService
       .createContact(
         this.newContactName,
         this.newContactEmail,
         this.newContactPhone,
-        this.newContactClientId,
+        this.newContactStakeholderId,
         this.newContactGroupId || null,
       )
       .subscribe({
@@ -184,7 +184,7 @@ export class Clients implements OnInit {
       });
   }
   removeContact(id: string): void {
-    this.clientsService.deleteContact(id).subscribe(() =>
+    this.stakeholdersService.deleteContact(id).subscribe(() =>
       this.contacts.update((list) => list.filter((c) => c.id !== id)),
     );
   }

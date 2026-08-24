@@ -1,6 +1,6 @@
 <div class="page">
   <header class="page-head">
-    <h1>Clients</h1>
+    <h1>Stakeholders</h1>
     @if (auth.isAdmin()) {
       <button type="button" class="btn btn-primary" (click)="showAddModal.set(true)">+ Add</button>
     }
@@ -11,30 +11,30 @@
   }
 
   <nav class="tab-strip">
-    <button type="button" [class.active]="activeTab() === 'clients'" (click)="setTab('clients')">Clients</button>
+    <button type="button" [class.active]="activeTab() === 'stakeholders'" (click)="setTab('stakeholders')">Stakeholders</button>
     <button type="button" [class.active]="activeTab() === 'contacts'" (click)="setTab('contacts')">Contacts</button>
     <button type="button" [class.active]="activeTab() === 'categories'" (click)="setTab('categories')">Categories</button>
     <button type="button" [class.active]="activeTab() === 'products'" (click)="setTab('products')">Products</button>
     <button type="button" [class.active]="activeTab() === 'contact-groups'" (click)="setTab('contact-groups')">Contact Groups</button>
   </nav>
 
-  @if (activeTab() === 'clients') {
+  @if (activeTab() === 'stakeholders') {
     <div class="card">
       <table class="data-table">
         <thead><tr><th>Name</th><th>Category</th><th>Products</th><th></th></tr></thead>
         <tbody>
-          @for (client of clients(); track client.id) {
+          @for (stakeholder of stakeholders(); track stakeholder.id) {
             <tr>
-              <td>{{ client.name }}</td>
-              <td>{{ client.clientCategoryName }}</td>
+              <td>{{ stakeholder.name }}</td>
+              <td>{{ stakeholder.stakeholderCategoryName }}</td>
               <td class="chips-cell">
                 @for (product of products(); track product.id) {
                   <button
                     type="button"
                     class="chip"
-                    [class.active]="hasProduct(client, product.name)"
+                    [class.active]="hasProduct(stakeholder, product.name)"
                     [disabled]="!auth.isAdmin()"
-                    (click)="toggleProduct(client, product)"
+                    (click)="toggleProduct(stakeholder, product)"
                   >
                     {{ product.name }}
                   </button>
@@ -42,12 +42,12 @@
               </td>
               <td>
                 @if (auth.isAdmin()) {
-                  <button type="button" class="btn-link" (click)="removeClient(client.id)">Remove</button>
+                  <button type="button" class="btn-link" (click)="removeStakeholder(stakeholder.id)">Remove</button>
                 }
               </td>
             </tr>
           } @empty {
-            <tr><td colspan="4" class="empty-note">No clients yet.</td></tr>
+            <tr><td colspan="4" class="empty-note">No stakeholders yet.</td></tr>
           }
         </tbody>
       </table>
@@ -57,12 +57,12 @@
   @if (activeTab() === 'contacts') {
     <div class="card">
       <table class="data-table">
-        <thead><tr><th>Name</th><th>Client</th><th>Group</th><th>Email</th><th></th></tr></thead>
+        <thead><tr><th>Name</th><th>Stakeholder</th><th>Group</th><th>Email</th><th></th></tr></thead>
         <tbody>
           @for (contact of contacts(); track contact.id) {
             <tr>
               <td>{{ contact.fullName }}</td>
-              <td>{{ contact.clientName }}</td>
+              <td>{{ contact.stakeholderName }}</td>
               <td>{{ contact.contactGroupName ?? '—' }}</td>
               <td>{{ contact.email }}</td>
               <td>
@@ -153,33 +153,33 @@
   }
 
   <app-modal [open]="showAddModal()" [title]="addModalTitle" (closed)="showAddModal.set(false)">
-    @if (activeTab() === 'clients') {
-      <form class="modal-form" (ngSubmit)="addClient()">
+    @if (activeTab() === 'stakeholders') {
+      <form class="modal-form" (ngSubmit)="addStakeholder()">
         <label>
           Category
-          <select name="clientCategory" class="select" [(ngModel)]="newClientCategoryId" required>
+          <select name="stakeholderCategory" class="select" [(ngModel)]="newStakeholderCategoryId" required>
             <option value="" disabled selected>Category…</option>
             @for (cat of categories(); track cat.id) {
               <option [value]="cat.id">{{ cat.name }}</option>
             }
           </select>
         </label>
-        <label>Name<input name="clientName" class="field" [(ngModel)]="newClientName" required /></label>
-        <label>Description<input name="clientDescription" class="field" [(ngModel)]="newClientDescription" /></label>
+        <label>Name<input name="stakeholderName" class="field" [(ngModel)]="newStakeholderName" required /></label>
+        <label>Description<input name="stakeholderDescription" class="field" [(ngModel)]="newStakeholderDescription" /></label>
         <div class="modal-actions">
           <button type="button" class="btn btn-secondary" (click)="showAddModal.set(false)">Cancel</button>
-          <button type="submit" class="btn btn-primary">Add client</button>
+          <button type="submit" class="btn btn-primary">Add stakeholder</button>
         </div>
       </form>
     }
     @if (activeTab() === 'contacts') {
       <form class="modal-form" (ngSubmit)="addContact()">
         <label>
-          Client
-          <select name="contactClient" class="select" [(ngModel)]="newContactClientId" required>
-            <option value="" disabled selected>Client…</option>
-            @for (client of clients(); track client.id) {
-              <option [value]="client.id">{{ client.name }}</option>
+          Stakeholder
+          <select name="contactStakeholder" class="select" [(ngModel)]="newContactStakeholderId" required>
+            <option value="" disabled selected>Stakeholder…</option>
+            @for (stakeholder of stakeholders(); track stakeholder.id) {
+              <option [value]="stakeholder.id">{{ stakeholder.name }}</option>
             }
           </select>
         </label>

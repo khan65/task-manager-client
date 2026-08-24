@@ -27,7 +27,7 @@
               }
             </select>
           </div>
-          <p class="meta">{{ project.clientName }} · {{ project.projectTypeName }}@if (project.departmentName) { · {{ project.departmentName }} }</p>
+          <p class="meta">{{ project.stakeholderName }} · {{ project.projectTypeName }}@if (project.departmentName) { · {{ project.departmentName }} }</p>
           <p class="description">{{ project.description }}</p>
           <p class="dates">Starts {{ project.startDate | date: 'mediumDate' }}@if (project.endDate) { — ends {{ project.endDate | date: 'mediumDate' }} }</p>
 
@@ -87,11 +87,11 @@
     @if (activeTab() === 'projects') {
       <form class="modal-form" (ngSubmit)="addProject()">
         <label>
-          Client
-          <select name="projectClient" class="select" [(ngModel)]="newProjectClientId" required>
-            <option value="" disabled selected>Client…</option>
-            @for (client of clients(); track client.id) {
-              <option [value]="client.id">{{ client.name }}</option>
+          Stakeholder
+          <select name="projectStakeholder" class="select" [(ngModel)]="newProjectStakeholderId" required>
+            <option value="" disabled selected>Stakeholder…</option>
+            @for (stakeholder of stakeholders(); track stakeholder.id) {
+              <option [value]="stakeholder.id">{{ stakeholder.name }}</option>
             }
           </select>
         </label>

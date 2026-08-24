@@ -1,4 +1,4 @@
-export interface ClientCategory {
+export interface StakeholderCategory {
   id: string;
   name: string;
   description: string;
@@ -16,13 +16,13 @@ export interface Product {
   description: string;
 }
 
-export interface ClientRecord {
+export interface Stakeholder {
   id: string;
   name: string;
   description: string;
   createdAt: string;
-  clientCategoryId: string;
-  clientCategoryName: string;
+  stakeholderCategoryId: string;
+  stakeholderCategoryName: string;
   products: string[];
 }
 
@@ -31,8 +31,8 @@ export interface Contact {
   fullName: string;
   email: string;
   phone: string;
-  clientId: string;
-  clientName: string;
+  stakeholderId: string;
+  stakeholderName: string;
   contactGroupId: string | null;
   contactGroupName: string | null;
 }
