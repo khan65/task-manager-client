@@ -6,7 +6,7 @@
     </div>
 
     <nav class="nav">
-      @for (item of navItems; track item.path) {
+      @for (item of navItems(); track item.path) {
         <a [routerLink]="item.path" routerLinkActive="active" class="nav-link">{{ item.label }}</a>
       }
     </nav>

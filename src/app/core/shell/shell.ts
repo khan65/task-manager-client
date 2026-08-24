@@ -1,6 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+
+interface NavItem {
+  path: string;
+  label: string;
+  adminOnly?: boolean;
+}
 
 @Component({
   selector: 'app-shell',
@@ -9,9 +15,10 @@ import { AuthService } from '../auth/auth.service';
   styleUrl: './shell.css',
 })
 export class Shell {
-  // Setup / Product / Login History / Reports join this bar once their modules land
-  // — Org Structure stands in for Setup until then.
-  readonly navItems = [
+  // Setup / Product / Reports join this bar once their modules land — Org Structure
+  // stands in for Setup until then. Login History is admin-only, matching its
+  // Admin-gated API endpoint (it's an audit list, not something every Member should see).
+  private readonly allNavItems: NavItem[] = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/tasks', label: 'Tasks' },
     { path: '/projects', label: 'Projects' },
@@ -19,7 +26,12 @@ export class Shell {
     { path: '/employees', label: 'Employees' },
     { path: '/org-structure', label: 'Org Structure' },
     { path: '/users', label: 'Users' },
+    { path: '/login-history', label: 'Login History', adminOnly: true },
   ];
+
+  readonly navItems = computed(() =>
+    this.allNavItems.filter((item) => !item.adminOnly || this.auth.isAdmin()),
+  );
 
   menuOpen = false;
 
