@@ -17,4 +17,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/users/users-list').then((m) => m.UsersList),
   },
+  {
+    path: 'org-structure',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/org-structure/org-structure').then((m) => m.OrgStructure),
+  },
 ];
