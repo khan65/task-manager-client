@@ -20,6 +20,7 @@ export class Shell {
   // Admin-gated API endpoint (it's an audit list, not something every Member should see).
   private readonly allNavItems: NavItem[] = [
     { path: '/dashboard', label: 'Dashboard' },
+    { path: '/ai', label: 'Ask' },
     { path: '/tasks', label: 'Tasks' },
     { path: '/projects', label: 'Projects' },
     { path: '/stakeholders', label: 'Stakeholders' },

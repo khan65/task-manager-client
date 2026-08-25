@@ -1,0 +1,87 @@
+.subtitle {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+.ask-form {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.ask-input {
+  flex: 1;
+}
+
+.banner-notice {
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-primary-soft-border);
+  color: var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.83rem;
+  margin-bottom: 1rem;
+}
+
+.answer-card {
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.answer-card h2 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-faint);
+  margin: 0 0 0.5rem;
+}
+
+.answer-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.sources-block h2 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-faint);
+  margin: 0 0 0.6rem;
+}
+
+.source-card {
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.source-type {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 0.4rem;
+}
+
+.source-card h3 {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  margin: 0 0 0.3rem;
+}
+
+.source-snippet {
+  font-size: 0.83rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}

@@ -1,0 +1,54 @@
+<div class="page ai-page">
+  <header class="page-head">
+    <div>
+      <h1>Ask</h1>
+      <span class="subtitle">Ask questions about your tasks, projects, and discussions in plain language.</span>
+    </div>
+  </header>
+
+  <form class="ask-form" (ngSubmit)="ask()">
+    <input
+      class="field ask-input"
+      [(ngModel)]="question"
+      name="question"
+      placeholder="e.g. what's blocking the Website Revamp project?"
+      [disabled]="loading()"
+    />
+    <button type="submit" class="btn btn-primary" [disabled]="loading() || !question.trim()">
+      {{ loading() ? 'Asking…' : 'Ask' }}
+    </button>
+  </form>
+
+  @if (errorMessage()) {
+    <p class="banner-error">{{ errorMessage() }}</p>
+  }
+
+  @if (result(); as r) {
+    @if (!r.aiEnabled) {
+      <p class="banner-notice">
+        AI-generated answers aren't enabled yet — add an Anthropic API key to activate them.
+        Showing the closest matching items instead.
+      </p>
+    }
+
+    @if (r.answer) {
+      <div class="card answer-card">
+        <h2>Answer</h2>
+        <p class="answer-text">{{ r.answer }}</p>
+      </div>
+    }
+
+    <div class="sources-block">
+      <h2>{{ r.answer ? 'Sources' : 'Matching results' }}</h2>
+      @for (source of r.sources; track source.entityId) {
+        <div class="card source-card">
+          <span class="source-type">{{ source.entityType }}</span>
+          <h3>{{ source.title }}</h3>
+          <p class="source-snippet">{{ source.snippet }}</p>
+        </div>
+      } @empty {
+        <p class="empty-note">No matching tasks, projects, or discussions found.</p>
+      }
+    </div>
+  }
+</div>
